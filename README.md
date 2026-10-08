@@ -290,3 +290,11 @@ Pharmacy pages reuse `listBranches` and `getBranch`; the read contract and local
 Favorites use `pharmaflow:favorites` with `{ "version": 1, "medicationIds": ["med-par-500"] }`. Only unique, validated IDs are stored. Missing data starts empty; malformed or unsupported data starts safely empty with an explanatory notice and is not overwritten until a local bookmark mutation. Read/write failures retain in-memory bookmarks and explain that changes may not survive reload. Relevant storage events validate incoming data and apply last-write-wins updates without writing it back. Clear-all uses inline confirmation and removes only the favorites key, preserving preferences and unrelated data.
 
 Catalog and Medication Detail share one bookmark source of truth. Favorites reuse MedicationCard and the existing default discovery projection; a separate complete `listMedications` read confirms which IDs still exist. IDs are retained while reads are pending or failed and reconciled only after the complete read succeeds. Toggles expose presentation-specific accessible names and pressed state; concise polite announcements and focus recovery support removal and clear-all. The navigation count describes saved presentations.
+
+## Copyright
+
+Copyright © 2026 Yordan Andres Chavez Barros. All rights reserved.
+
+PharmaFlow is publicly available for portfolio and technical evaluation purposes. No open-source license is granted for this project.
+
+See [NOTICE.md](NOTICE.md) for details.
