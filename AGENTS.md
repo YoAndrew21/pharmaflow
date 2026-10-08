@@ -1,0 +1,16 @@
+# PharmaFlow
+
+- Read PRODUCT_PLAN.md before changing architecture or product behavior. Preserve it unless explicitly asked to revise it.
+- Implement only the currently authorized increment. Phase A catalog discovery, medication detail, branch comparison, pharmacy directory/detail, and browser-local favorites are implemented. The integration review has run; closure still requires manual native browser zoom, the remaining visual walkthrough, and a real screen-reader/browser check documented in README.md. Later phases need separate authorization. Preserve per-presentation identity and distinguish null observations from unavailable stock.
+- Keep Favorites in its narrow Context/reducer and storage boundary. Store only unique medication IDs in the versioned favorites key, preserve unrelated storage, support memory-only recovery and validated cross-tab events, and reconcile unknown IDs only after a successful complete authoritative lookup. Never prune during loading or reader failure.
+- Pharmacy pages reuse the existing branch reader operations and canonical weekly schedules. Keep hours deterministic, include closed days and split intervals, and avoid live open/closed calculations or real location/contact data. Branch catalog links must use existing URL filters, never duplicate discovery logic.
+- Keep frontend code in frontend/. Target architecture is React/TypeScript/Vite → ASP.NET Core/C# → PostgreSQL; backend/database work comes later.
+- Use original implementation, copy, and assets. Never consult or reproduce proprietary employer code, screens, schemas, rules, or data.
+- Fictional demonstration data only. No real pharmacy affiliation, personal information, clinical advice, ERP/WMS, patient, prescription, checkout, or admin workflows.
+- Keep data reads separate from UI through a small typed asynchronous boundary; no fake HTTP or artificial latency.
+- Favor semantic HTML, keyboard navigation, visible focus, meaningful status text, responsive layouts, and intentional light/dark themes.
+- English, Spanish, and Japanese UI resources are implemented. Add every future user-facing and accessibility message to all three locales, preserving key/interpolation parity. Keep English as default/fallback, locale preference separate from Favorites, and IDs/slugs/query semantics independent of translated presentation. Do not add automatic translation or runtime transliteration.
+- Keep canonical medication/ingredient names and fictional branch proper names stable across locales; packages, surrounding UI and disclosures are explicitly authored translations. New localized domain names require a reviewed ID-based overlay and deterministic search tests. Preserve locale-aware USD/UTC formatting and localized route context in detail document titles. Verify Japanese line breaking and system font fallback on the rendered UI.
+- Justify major dependencies and architecture changes. Prefer React state, narrow Context, and CSS Modules.
+- Run typecheck, lint, format:check, test, and build from frontend/ after relevant changes. Canonical fictional data lives only in demo-data/catalog.json; preserve IDs and snapshot timestamps for future seeds.
+- Do not commit, push, publish, or implement later phases without user authorization.

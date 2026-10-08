@@ -1,0 +1,72 @@
+.section {
+  min-width: 0;
+  margin-block: 4rem;
+}
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+.header h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+.header p:not(:global(.eyebrow)) {
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 62ch;
+  margin: 0.75rem 0 0;
+}
+.controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+.controls button {
+  padding: 0.7rem;
+  border-radius: var(--radius-pill);
+}
+.controls button[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: default;
+}
+.instructions {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 1rem 0 0.25rem;
+}
+.track {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+  padding: 0.75rem 0.5rem 1.5rem;
+  margin: 0 -0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.5rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.track::-webkit-scrollbar {
+  display: none;
+}
+.track > li {
+  flex: 0 0 min(85%, 22.5rem);
+  min-width: 0;
+  scroll-snap-align: start;
+}
+@media (max-width: 35.99rem) {
+  .header {
+    flex-wrap: wrap;
+  }
+  .controls {
+    margin-left: auto;
+  }
+  .section {
+    margin-block: 3rem;
+  }
+}

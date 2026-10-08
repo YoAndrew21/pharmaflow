@@ -1,0 +1,131 @@
+.page {
+  padding-block: var(--space-8) 4rem;
+}
+.page h1 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  margin: 0 0 var(--space-3);
+  overflow-wrap: anywhere;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-underline-offset: 0.2em;
+  margin-bottom: var(--space-5);
+}
+.identity {
+  margin-bottom: var(--space-6);
+}
+.detailHero {
+  display: grid;
+  gap: 1.75rem;
+  align-items: start;
+}
+.detailHero > div {
+  min-width: 0;
+}
+.artwork {
+  margin: 0;
+}
+.artwork > div {
+  aspect-ratio: 1.75;
+  display: grid;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.artwork figcaption {
+  color: var(--muted);
+  font-size: 0.72rem;
+  padding: 0.8rem 0.25rem;
+  max-width: 60ch;
+}
+.presentation {
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.catalogFacts {
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+}
+.catalogFacts h2 {
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-4);
+}
+.catalogFacts dl {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+}
+.catalogFacts dl div {
+  min-width: 0;
+}
+.catalogFacts dt {
+  color: var(--muted);
+  font-size: 0.76rem;
+  margin-bottom: 0.3rem;
+}
+.catalogFacts dd {
+  margin: 0;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+.prescriptionNote {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin: var(--space-5) 0 0;
+}
+.disclosure {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  font-size: 0.83rem;
+  margin: var(--space-4) 0 0;
+}
+.disclosure svg {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+  color: var(--accent-text);
+}
+.state {
+  margin-block: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(ellipse at top right, var(--glow), transparent 70%),
+    var(--surface);
+}
+.state p {
+  color: var(--muted);
+  max-width: 65ch;
+  margin-bottom: var(--space-5);
+}
+@media (min-width: 36rem) {
+  .catalogFacts dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 60rem) {
+  .artwork > div {
+    aspect-ratio: 1.2;
+  }
+  .detailHero {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 2.5rem;
+  }
+}

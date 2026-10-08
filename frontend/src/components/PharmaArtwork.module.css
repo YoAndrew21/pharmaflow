@@ -1,0 +1,33 @@
+.art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 20 / 13;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 70%, var(--glow), transparent 70%),
+    var(--art-background);
+  border-radius: var(--radius-md);
+}
+.art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.object {
+  transform-origin: center;
+  transition: transform var(--duration-depth) var(--ease-out);
+}
+.art[data-variant='willow-arcade'] {
+  --art-blue: var(--art-violet);
+}
+.art[data-variant='lantern-court'] {
+  --art-blue: var(--art-branch-cyan);
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .art:hover .object,
+  :global(article):hover .object,
+  :global(a):hover .object {
+    transform: translateY(-3px) scale(1.025);
+  }
+}

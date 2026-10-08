@@ -1,0 +1,229 @@
+.shell {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  padding-top: 1rem;
+}
+.headerInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text);
+  text-decoration: none;
+}
+.brand strong {
+  font-size: 1.25rem;
+  letter-spacing: -0.055em;
+}
+.brandIcon {
+  width: 40px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, var(--accent), var(--accent-hover));
+  color: var(--on-accent);
+  border-radius: 0.85rem;
+  box-shadow: var(--shadow-glow);
+}
+.brandCaption {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+.menuButton {
+  margin-left: auto;
+  padding: 0.6rem 0.75rem;
+}
+.nav {
+  display: none;
+  width: 100%;
+  order: 4;
+  gap: 0.4rem;
+}
+.open {
+  display: flex;
+  flex-direction: column;
+  animation: reveal var(--duration-medium) var(--ease-out);
+}
+.navLink,
+.activeLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition:
+    color var(--duration-fast),
+    background var(--duration-medium);
+  white-space: nowrap;
+}
+.navLink {
+  color: var(--muted);
+}
+.navLink:hover {
+  color: var(--text);
+  background: var(--surface-soft);
+}
+.activeLink {
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.activeLink::after {
+  content: '';
+  position: absolute;
+  inset: auto auto 5px 0.85rem;
+  width: 1.5rem;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+  animation: navLight var(--duration-medium) var(--ease-out);
+}
+@keyframes navLight {
+  from {
+    opacity: 0;
+    transform: scaleX(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+.theme {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--border);
+}
+.favoriteCount {
+  display: inline-block;
+  min-width: 1.3rem;
+  margin-left: 0.25rem;
+  font-size: 0.72rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  border-radius: var(--radius-pill);
+}
+.main {
+  flex: 1;
+  min-width: 0;
+}
+.footer {
+  border-top: 1px solid var(--border);
+  padding-block: 2rem;
+  background: var(--surface);
+}
+.demo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  margin: 0;
+}
+.demo svg {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  color: var(--accent-text);
+}
+.footerNote {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin: 0.65rem 0 0;
+}
+@media (min-width: 60rem) {
+  .headerInner {
+    flex-wrap: nowrap;
+    padding: 0.55rem 0.85rem;
+    border-radius: var(--radius-pill);
+    gap: 0.65rem;
+  }
+  .menuButton {
+    display: none;
+  }
+  .nav {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    order: initial;
+    margin-left: auto;
+    gap: 0.15rem;
+  }
+  .theme {
+    width: auto;
+    flex-wrap: nowrap;
+    padding: 0 0 0 0.75rem;
+    border-top: 0;
+    border-left: 1px solid var(--border);
+  }
+  .theme button span {
+    display: none;
+  }
+  .theme button {
+    padding: 0.65rem;
+    border-radius: var(--radius-pill);
+  }
+  .theme label > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .navLink,
+  .activeLink {
+    padding-inline: 0.65rem;
+  }
+}
+@media (max-width: 23rem) {
+  .theme button span {
+    display: none;
+  }
+  .theme button {
+    min-width: 44px;
+    padding: 0.65rem;
+  }
+  .brandIcon {
+    width: 34px;
+    height: 40px;
+  }
+  .brand strong {
+    font-size: 1.1rem;
+  }
+  .brandCaption {
+    font-size: 0.6rem;
+  }
+  .headerInner {
+    gap: 0.5rem;
+    padding: 0.7rem;
+  }
+  .menuButton {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+}

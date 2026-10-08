@@ -1,0 +1,191 @@
+.page {
+  padding-block: var(--space-10) 4rem;
+}
+.page h1 {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  margin: 0 0 var(--space-3);
+  overflow-wrap: anywhere;
+}
+.description {
+  color: var(--muted);
+  max-width: 75ch;
+  margin: 0 0 var(--space-6);
+}
+.directory {
+  display: grid;
+  gap: var(--space-5);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.directory li {
+  min-width: 0;
+}
+.card,
+.information,
+.state {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  overflow-wrap: anywhere;
+}
+.card {
+  height: 100%;
+  box-shadow: var(--shadow);
+  transition:
+    transform var(--duration-medium) var(--ease-out),
+    box-shadow var(--duration-medium),
+    border-color var(--duration-medium);
+}
+.cardArtwork {
+  margin: -0.6rem -0.6rem 1.2rem;
+}
+.cardArtwork > div {
+  aspect-ratio: 1.7;
+}
+.detailGrid {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+  margin-block: 1.75rem;
+}
+.detailArtwork {
+  margin: 0;
+}
+.detailArtwork > div {
+  aspect-ratio: 1.75;
+  display: grid;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.detailArtwork figcaption {
+  color: var(--muted);
+  font-size: 0.72rem;
+  padding: 0.8rem 0.25rem;
+}
+.detailGrid .information {
+  margin: 0;
+  width: 100%;
+}
+.card h2 {
+  font-size: 1.3rem;
+  margin: 0 0 var(--space-2);
+  letter-spacing: -0.025em;
+}
+.branchLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-underline-offset: 0.2em;
+}
+.location {
+  font-size: 0.95rem;
+  margin: 0 0 var(--space-5);
+}
+.indicator,
+.timeZone {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.indicator {
+  margin: 0 0 var(--space-2);
+}
+.hours :is(h2, h3) {
+  font-size: 1rem;
+  margin: 0 0 var(--space-2);
+}
+.timeZone {
+  margin: 0 0 var(--space-4);
+}
+.schedule {
+  margin: 0;
+}
+.schedule > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.schedule > div:nth-child(even) {
+  background: var(--surface-soft);
+  border-radius: 0.4rem;
+}
+.schedule > div {
+  padding-inline: 0.5rem;
+}
+.schedule > div:last-child {
+  border: 0;
+}
+.schedule dt {
+  color: var(--muted);
+}
+.schedule dd {
+  margin: 0;
+}
+.interval {
+  display: block;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  margin-bottom: var(--space-5);
+  text-underline-offset: 0.2em;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.information {
+  max-width: 44rem;
+  margin-block: var(--space-5);
+}
+.information > h2 {
+  font-size: 1rem;
+  margin: 0 0 var(--space-2);
+}
+.disclosure {
+  max-width: 75ch;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-block: var(--space-5);
+}
+.state {
+  margin-block: var(--space-5);
+  background:
+    radial-gradient(ellipse at top right, var(--glow), transparent 70%),
+    var(--surface);
+}
+.state p {
+  color: var(--muted);
+  max-width: 65ch;
+}
+@media (min-width: 44rem) {
+  .directory {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .detailArtwork > div {
+    aspect-ratio: 1.1;
+  }
+  .directory {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .detailGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-raised);
+    border-color: var(--border-interactive);
+  }
+}

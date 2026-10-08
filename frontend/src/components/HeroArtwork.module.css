@@ -1,0 +1,80 @@
+.scene {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 15;
+  isolation: isolate;
+  perspective: 1000px;
+  background: radial-gradient(ellipse at 52% 48%, var(--glow), transparent 65%);
+}
+.orbits,
+.centerpiece {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.orbits {
+  opacity: 0.85;
+  transition: transform var(--duration-depth) var(--ease-out);
+}
+.centerpiece {
+  transform-style: preserve-3d;
+  transition: transform var(--duration-depth) var(--ease-out);
+}
+.centerpiece svg,
+.render {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.shadow {
+  position: absolute;
+  left: 27%;
+  right: 23%;
+  bottom: 14%;
+  height: 5%;
+  border-radius: 50%;
+  background: var(--art-shadow);
+  opacity: 0.16;
+  filter: blur(10px);
+  transition:
+    transform var(--duration-depth),
+    opacity var(--duration-depth);
+}
+.frontRibbon,
+.rearRibbon,
+.nodes {
+  transform-origin: center;
+  transition: transform var(--duration-depth) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .scene:hover .centerpiece {
+    transform: translateY(-5px) rotateY(-4deg) rotateX(2deg);
+  }
+  .scene:hover .orbits {
+    transform: translateY(2px) rotate(1deg);
+  }
+  .scene:hover .frontRibbon {
+    transform: translate(2px, -2px);
+  }
+  .scene:hover .rearRibbon {
+    transform: translate(-2px, 1px);
+  }
+  .scene:hover .nodes {
+    transform: translateY(-3px);
+  }
+  .scene:hover .shadow {
+    transform: scaleX(0.94) translateY(3px);
+    opacity: 0.12;
+  }
+}
+@media (max-width: 39.99rem) {
+  .orbits {
+    opacity: 0.55;
+  }
+  .centerpiece {
+    inset: -2% 0 0;
+    height: 102%;
+  }
+}

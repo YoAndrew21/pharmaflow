@@ -1,0 +1,122 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--accent-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  max-width: 100%;
+  margin-top: var(--space-4);
+  transition:
+    background var(--duration-fast),
+    border-color var(--duration-fast),
+    transform var(--duration-fast);
+}
+.toggle:hover {
+  border-color: var(--border-interactive);
+  background: var(--surface-interactive);
+}
+.toggle:active {
+  transform: translateY(1px);
+}
+.toggle[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--border-interactive);
+}
+.toggle[aria-pressed='true'] svg {
+  animation: bookmark-in 280ms var(--ease-out);
+}
+@keyframes bookmark-in {
+  from {
+    transform: scale(0.75);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.toggle svg {
+  flex-shrink: 0;
+}
+.toggle span {
+  overflow-wrap: anywhere;
+}
+.page {
+  padding-block: var(--space-10) 4rem;
+}
+.page h1 {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  margin: 0 0 var(--space-3);
+}
+.description {
+  color: var(--muted);
+  max-width: 80ch;
+}
+.notice {
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  max-width: 80ch;
+  font-size: 0.88rem;
+}
+.toolbar,
+.confirmation {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-block: var(--space-5);
+}
+.toolbar p {
+  margin: 0;
+  font-weight: 600;
+  margin-right: auto;
+}
+.confirmation {
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  animation: reveal var(--duration-medium) var(--ease-out);
+}
+.confirmation p {
+  width: 100%;
+  margin: 0;
+}
+.state {
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(ellipse at top right, var(--glow), transparent 70%),
+    var(--surface);
+  margin-block: var(--space-5);
+}
+.state h2 {
+  font-size: 1.25rem;
+  margin-top: 0;
+}
+.state p {
+  color: var(--muted);
+  max-width: 62ch;
+}
+.announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

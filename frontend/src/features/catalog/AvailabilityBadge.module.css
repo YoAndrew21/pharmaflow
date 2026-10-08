@@ -1,0 +1,31 @@
+.badge {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.6rem;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  max-width: 100%;
+}
+.badge svg {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.badge[data-status='available'] {
+  color: var(--success-text);
+  background: var(--success-surface);
+}
+.badge[data-status='low-stock'] {
+  color: var(--low-stock-text);
+  background: var(--low-stock-surface);
+}
+.badge[data-status='unavailable'] {
+  color: var(--unavailable-text);
+  background: var(--unavailable-surface);
+}
+.badge[data-status='unknown'] {
+  color: var(--muted);
+}
