@@ -17,3 +17,7 @@ Thumbs.db
 *.pem
 *.key
 secrets/
+
+# .NET build artifacts
+[Bb]in/
+[Oo]bj/
