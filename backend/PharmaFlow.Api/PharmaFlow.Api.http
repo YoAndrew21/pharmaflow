@@ -1,0 +1,39 @@
+@PharmaFlow.Api_HostAddress = http://localhost:5004
+
+GET {{PharmaFlow.Api_HostAddress}}/api/medications
+Accept: application/json
+
+###
+
+GET {{PharmaFlow.Api_HostAddress}}/api/medications/paracetamol-500-tablets
+Accept: application/json
+
+###
+
+# Unknown presentation: HTTP 404.
+GET {{PharmaFlow.Api_HostAddress}}/api/medications/unknown-presentation
+Accept: application/json
+
+###
+
+GET {{PharmaFlow.Api_HostAddress}}/api/pharmacies
+Accept: application/json
+
+###
+
+GET {{PharmaFlow.Api_HostAddress}}/api/pharmacies/aster-commons
+Accept: application/json
+
+###
+
+# Unknown branch: HTTP 404.
+GET {{PharmaFlow.Api_HostAddress}}/api/pharmacies/unknown-branch
+Accept: application/json
+
+###
+
+# Recorded observations only; missing medication/branch pairs are not synthesized.
+GET {{PharmaFlow.Api_HostAddress}}/api/availability
+Accept: application/json
+
+###
