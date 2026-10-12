@@ -1,19 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>8c6ef455-0bf9-486d-9ea6-cb5be7bc6434</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <!-- Keep runtime/transitive EF assemblies aligned with the installed design package. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Embed the canonical source, never a separately maintained fixture copy. -->
-    <EmbeddedResource Include="../../demo-data/catalog.json"
-                      LogicalName="PharmaFlow.Api.CanonicalCatalog.json" />
+    <EmbeddedResource Include="../../demo-data/catalog.json" LogicalName="PharmaFlow.Api.CanonicalCatalog.json" />
   </ItemGroup>
 
 </Project>
