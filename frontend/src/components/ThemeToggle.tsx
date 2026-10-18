@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import styles from './ThemeToggle.module.css'
 import {
   applyTheme,
   getInitialTheme,
@@ -23,7 +24,7 @@ export function ThemeToggle() {
 
   return (
     <button
-      className="utility-button"
+      className={`utility-button ${styles.toggle}`}
       type="button"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       aria-label={t(
@@ -35,7 +36,9 @@ export function ThemeToggle() {
       ) : (
         <Sun size={18} aria-hidden="true" />
       )}
-      <span>{t(theme === 'light' ? 'theme.dark' : 'theme.light')}</span>
+      <span className={styles.label}>
+        {t(theme === 'light' ? 'theme.dark' : 'theme.light')}
+      </span>
     </button>
   )
 }

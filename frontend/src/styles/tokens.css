@@ -28,6 +28,10 @@
   --duration-entrance: 600ms;
   --duration-depth: 480ms;
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --control-min-size: 44px;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 4px;
+  --disabled-opacity: 0.45;
   --background: #f3f6fc;
   --surface: #ffffff;
   --surface-soft: #eaf0fa;

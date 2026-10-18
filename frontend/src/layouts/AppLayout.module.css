@@ -64,7 +64,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--control-min-size);
   padding: 0.65rem 0.85rem;
   border-radius: var(--radius-pill);
   text-decoration: none;
@@ -179,35 +179,12 @@
     border-top: 0;
     border-left: 1px solid var(--border);
   }
-  .theme button span {
-    display: none;
-  }
-  .theme button {
-    padding: 0.65rem;
-    border-radius: var(--radius-pill);
-  }
-  .theme label > span {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
   .navLink,
   .activeLink {
     padding-inline: 0.65rem;
   }
 }
 @media (max-width: 23rem) {
-  .theme button span {
-    display: none;
-  }
-  .theme button {
-    min-width: 44px;
-    padding: 0.65rem;
-  }
   .brandIcon {
     width: 34px;
     height: 40px;

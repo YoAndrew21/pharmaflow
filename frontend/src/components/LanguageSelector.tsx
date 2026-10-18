@@ -6,7 +6,7 @@ export function LanguageSelector() {
   const { t, i18n } = useTranslation()
   return (
     <label className={styles.control}>
-      <span>{t('language')}</span>
+      <span className={styles.label}>{t('language')}</span>
       <select
         value={i18n.resolvedLanguage ?? 'en'}
         onChange={(event) => {

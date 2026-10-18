@@ -1,0 +1,16 @@
+.toggle {
+  min-width: var(--control-min-size);
+}
+@media (min-width: 60rem), (max-width: 23rem) {
+  .label {
+    display: none;
+  }
+  .toggle {
+    padding: 0.65rem;
+  }
+}
+@media (min-width: 60rem) {
+  .toggle {
+    border-radius: var(--radius-pill);
+  }
+}

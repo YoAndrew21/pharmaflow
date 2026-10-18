@@ -30,7 +30,7 @@
   border-radius: var(--radius-pill);
 }
 .controls button[aria-disabled='true'] {
-  opacity: 0.45;
+  opacity: var(--disabled-opacity);
   cursor: default;
 }
 .instructions {
