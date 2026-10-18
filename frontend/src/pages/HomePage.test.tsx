@@ -1,3 +1,4 @@
+import { selectTrigger } from '../test/select'
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
@@ -60,7 +61,10 @@ describe('Home discovery reads', () => {
     setup()
     await userEvent.click(await screen.findByRole('link', { name: 'Capsule' }))
     await screen.findByText('2 presentations found')
-    expect(screen.getByLabelText('Pharmaceutical form')).toHaveValue('capsule')
+    expect(selectTrigger('Pharmaceutical form')).toHaveTextContent('Capsule')
+    expect(
+      new FormData(screen.getByRole('search') as HTMLFormElement).get('form'),
+    ).toBe('capsule')
     expect(screen.getAllByRole('article')).toHaveLength(2)
   })
   it('keeps search usable while discovery is pending, without displaying empty data', async () => {

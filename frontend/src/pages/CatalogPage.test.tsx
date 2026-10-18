@@ -12,6 +12,7 @@ import { describe, expect, it, vi } from 'vitest'
 import type { CatalogReader } from '../data/catalogReader'
 import { localCatalogReader } from '../data/localCatalogReader'
 import { defaultCatalogQuery, type CatalogResult } from '../domain/catalog'
+import { chooseOption, selectTrigger } from '../test/select'
 import { CatalogPage } from './CatalogPage'
 import { HomePage } from './HomePage'
 
@@ -51,6 +52,125 @@ function deferred<T>() {
 }
 
 describe('catalog workflow', () => {
+  it('submits sequential committed selections exactly once and includes the current search draft', async () => {
+    const user = userEvent.setup()
+    const requestSubmit = vi.spyOn(HTMLFormElement.prototype, 'requestSubmit')
+    try {
+      renderCatalog()
+      await screen.findByText('9 presentations found')
+      await user.type(screen.getByRole('searchbox'), 'para')
+      await chooseOption(selectTrigger('Pharmacy branch'), 'Aster Commons')
+      expect(requestSubmit).toHaveBeenCalledTimes(1)
+      expect(screen.getByTestId('url')).toHaveTextContent(
+        '/catalog?q=para&branch=aster-commons',
+      )
+      await chooseOption(selectTrigger('Availability'), 'Low stock')
+      await chooseOption(
+        selectTrigger('Sort by'),
+        'Reference price (low to high)',
+      )
+      expect(requestSubmit).toHaveBeenCalledTimes(3)
+      expect(screen.getByTestId('url')).toHaveTextContent(
+        '/catalog?q=para&branch=aster-commons&availability=low-stock&sort=price',
+      )
+      // Ordinary button/Enter submissions must not reuse a selection override.
+      await user.click(screen.getByRole('button', { name: 'Search catalog' }))
+      expect(screen.getByTestId('url')).toHaveTextContent(
+        '/catalog?q=para&branch=aster-commons&availability=low-stock&sort=price',
+      )
+      await user.clear(screen.getByRole('searchbox'))
+      await user.type(screen.getByRole('searchbox'), 'caffeine{Enter}')
+      expect(screen.getByTestId('url')).toHaveTextContent(
+        '/catalog?q=caffeine&branch=aster-commons&availability=low-stock&sort=price',
+      )
+    } finally {
+      requestSubmit.mockRestore()
+    }
+  })
+  it('clears each empty-string filter through its original form name and URL serializer', async () => {
+    renderCatalog(
+      '/catalog?q=para&branch=aster-commons&availability=low-stock&form=tablet',
+    )
+    await screen.findByText('1 presentation found')
+    await chooseOption(selectTrigger('Pharmacy branch'), 'All branches')
+    expect(screen.getByTestId('url')).toHaveTextContent(
+      '/catalog?q=para&availability=low-stock&form=tablet',
+    )
+    await chooseOption(selectTrigger('Availability'), 'All statuses')
+    expect(screen.getByTestId('url')).toHaveTextContent(
+      '/catalog?q=para&form=tablet',
+    )
+    await chooseOption(selectTrigger('Pharmaceutical form'), 'All forms')
+    expect(screen.getByTestId('url')).toHaveTextContent(/^\/catalog\?q=para$/)
+    expect(
+      Object.fromEntries(
+        new FormData(screen.getByRole('search') as HTMLFormElement),
+      ),
+    ).toEqual({
+      q: 'para',
+      branch: '',
+      availability: '',
+      form: '',
+      sort: 'name',
+    })
+  })
+  it.each([
+    '/catalog',
+    '/catalog?q=para&branch=willow-arcade&availability=low-stock&form=tablet&sort=price',
+  ])(
+    'resets %s without intermediate auto-submissions and restores URL-controlled defaults',
+    async (url) => {
+      const user = userEvent.setup()
+      const requestSubmit = vi.spyOn(HTMLFormElement.prototype, 'requestSubmit')
+      try {
+        renderCatalog(url)
+        await screen.findByRole('list', { name: 'Medication presentations' })
+        if (url === '/catalog') {
+          await chooseOption(selectTrigger('Pharmacy branch'), 'Aster Commons')
+          await chooseOption(selectTrigger('Availability'), 'Low stock')
+          await chooseOption(selectTrigger('Pharmaceutical form'), 'Tablet')
+          await chooseOption(
+            selectTrigger('Sort by'),
+            'Reference price (low to high)',
+          )
+        }
+        await user.type(screen.getByRole('searchbox'), 'unsubmitted')
+        requestSubmit.mockClear()
+        await user.click(
+          screen.getAllByRole('button', { name: 'Clear search & filters' })[0]!,
+        )
+        await screen.findByText('9 presentations found')
+        expect(requestSubmit).not.toHaveBeenCalled()
+        expect(screen.getByTestId('url')).toHaveTextContent(/^\/catalog$/)
+        expect(screen.getByRole('searchbox')).toHaveValue('')
+        const fields = new FormData(
+          screen.getByRole('search') as HTMLFormElement,
+        )
+        expect(Object.fromEntries(fields)).toEqual({
+          q: '',
+          branch: '',
+          availability: '',
+          form: '',
+          sort: 'name',
+        })
+        expect(selectTrigger('Pharmacy branch')).toHaveTextContent(
+          'All branches',
+        )
+        expect(selectTrigger('Availability')).toHaveTextContent('All statuses')
+        expect(selectTrigger('Pharmaceutical form')).toHaveTextContent(
+          'All forms',
+        )
+        expect(selectTrigger('Sort by')).toHaveTextContent('Name (A–Z)')
+        await user.click(screen.getByRole('button', { name: 'Go back' }))
+        expect(screen.getByTestId('url')).not.toHaveTextContent(/^\/catalog$/)
+        expect(selectTrigger('Pharmacy branch')).toHaveTextContent(
+          url === '/catalog' ? 'Aster Commons' : 'Willow Arcade',
+        )
+      } finally {
+        requestSubmit.mockRestore()
+      }
+    },
+  )
   it('renders accessible presentation cards and mixed status text with aggregate prices', async () => {
     renderCatalog()
     expect(await screen.findByText('9 presentations found')).toHaveAttribute(
@@ -87,9 +207,7 @@ describe('catalog workflow', () => {
         name: 'Medication name or active ingredient',
       }),
     ).toHaveValue('para')
-    expect(screen.getByLabelText('Pharmacy branch')).toHaveValue(
-      'aster-commons',
-    )
+    expect(selectTrigger('Pharmacy branch')).toHaveTextContent('Aster Commons')
     const card = screen.getByRole('article', { name: 'Paracetamol · 1000 mg' })
     expect(within(card).getByText('Low stock')).toBeInTheDocument()
     expect(within(card).getByText(/USD\s7.00/)).toBeInTheDocument()
@@ -117,24 +235,24 @@ describe('catalog workflow', () => {
     await user.type(searchbox, 'paracetamol{Enter}')
     await screen.findByText('3 presentations found')
     expect(searchbox).toHaveFocus()
-    const branch = screen.getByLabelText('Pharmacy branch')
-    await user.selectOptions(branch, 'aster-commons')
+    const branch = selectTrigger('Pharmacy branch')
+    await chooseOption(branch, 'Aster Commons')
     await waitFor(() =>
       expect(screen.getByTestId('url')).toHaveTextContent(
         'branch=aster-commons',
       ),
     )
-    await user.selectOptions(screen.getByLabelText('Availability'), 'low-stock')
+    await chooseOption(selectTrigger('Availability'), 'Low stock')
     await screen.findByText('1 presentation found')
-    expect(screen.getByLabelText('Availability')).toHaveFocus()
-    await user.selectOptions(
-      screen.getByLabelText('Pharmaceutical form'),
-      'tablet',
-    )
+    expect(selectTrigger('Availability')).toHaveFocus()
+    await chooseOption(selectTrigger('Pharmaceutical form'), 'Tablet')
     await waitFor(() =>
       expect(screen.getByTestId('url')).toHaveTextContent('form=tablet'),
     )
-    await user.selectOptions(screen.getByLabelText('Sort by'), 'price')
+    await chooseOption(
+      selectTrigger('Sort by'),
+      'Reference price (low to high)',
+    )
     await waitFor(() =>
       expect(screen.getByTestId('url')).toHaveTextContent('sort=price'),
     )
@@ -144,8 +262,8 @@ describe('catalog workflow', () => {
     await screen.findByText('9 presentations found')
     expect(screen.getByTestId('url')).toHaveTextContent(/^\/catalog$/)
     expect(screen.getByRole('searchbox')).toHaveValue('')
-    expect(screen.getByLabelText('Pharmacy branch')).toHaveValue('')
-    expect(screen.getByLabelText('Sort by')).toHaveValue('name')
+    expect(selectTrigger('Pharmacy branch')).toHaveTextContent('All branches')
+    expect(selectTrigger('Sort by')).toHaveTextContent('Name')
     await user.type(screen.getByRole('searchbox'), 'unsubmitted')
     await user.click(
       screen.getByRole('button', { name: 'Clear search & filters' }),
@@ -185,10 +303,10 @@ describe('catalog workflow', () => {
       '/catalog?branch=unknown&form=unknown&availability=unknown&sort=unknown',
     )
     await screen.findByText('9 presentations found')
-    expect(screen.getByLabelText('Pharmacy branch')).toHaveValue('')
-    expect(screen.getByLabelText('Pharmaceutical form')).toHaveValue('')
-    expect(screen.getByLabelText('Availability')).toHaveValue('')
-    expect(screen.getByLabelText('Sort by')).toHaveValue('name')
+    expect(selectTrigger('Pharmacy branch')).toHaveTextContent('All branches')
+    expect(selectTrigger('Pharmaceutical form')).toHaveTextContent('All forms')
+    expect(selectTrigger('Availability')).toHaveTextContent('All statuses')
+    expect(selectTrigger('Sort by')).toHaveTextContent('Name')
   })
   it('announces a pending read and then renders successful results', async () => {
     const pending = deferred<CatalogResult>()
@@ -223,7 +341,6 @@ describe('catalog workflow', () => {
     expect(discover).toHaveBeenCalledTimes(2)
   })
   it('keeps controls during new reads and ignores stale promise resolutions', async () => {
-    const user = userEvent.setup()
     const old = deferred<CatalogResult>()
     const current = deferred<CatalogResult>()
     const discover = vi
@@ -233,15 +350,9 @@ describe('catalog workflow', () => {
       .mockImplementationOnce(() => current.promise)
     renderCatalog('/catalog', { ...localCatalogReader, discover })
     await screen.findByText('9 presentations found')
-    await user.selectOptions(
-      screen.getByLabelText('Pharmacy branch'),
-      'aster-commons',
-    )
+    await chooseOption(selectTrigger('Pharmacy branch'), 'Aster Commons')
     expect(screen.getByRole('status')).toHaveTextContent('Loading catalog…')
-    await user.selectOptions(
-      screen.getByLabelText('Availability'),
-      'unavailable',
-    )
+    await chooseOption(selectTrigger('Availability'), 'Unavailable')
     await act(async () =>
       current.resolve(
         await localCatalogReader.discover({

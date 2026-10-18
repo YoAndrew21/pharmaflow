@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { Select } from '../components/Select'
 import { SearchField } from '../components/SearchField'
 import type { CatalogReader } from '../data/catalogReader'
 import { runtimeCatalogReader } from '../data/runtimeCatalogReader'
@@ -30,13 +31,38 @@ export function CatalogPage({
   const [attempt, setAttempt] = useState(0)
   const { state, metadata } = useCatalog(reader, query, `${search}:${attempt}`)
   const formRef = useRef<HTMLFormElement>(null)
+  type SelectField = 'branch' | 'availability' | 'form' | 'sort'
+  const pendingSelection = useRef<{ name: SelectField; value: string } | null>(
+    null,
+  )
+  const resetting = useRef(false)
   const reset = () => {
-    formRef.current?.reset()
-    setParams(new URLSearchParams())
+    pendingSelection.current = null
+    resetting.current = true
+    try {
+      // React Aria resets named controls too; those callbacks must not submit.
+      formRef.current?.reset()
+      setParams(new URLSearchParams())
+    } finally {
+      resetting.current = false
+    }
+  }
+  function select(name: SelectField, value: string) {
+    if (resetting.current) return
+    pendingSelection.current = { name, value }
+    try {
+      formRef.current?.requestSubmit()
+    } finally {
+      pendingSelection.current = null
+    }
   }
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const fields = new FormData(event.currentTarget)
+    // The hidden native select may still reflect the previous React render.
+    const committed = pendingSelection.current
+    pendingSelection.current = null
+    if (committed) fields.set(committed.name, committed.value)
     const next = new URLSearchParams()
     for (const key of ['q', 'branch', 'availability', 'form', 'sort'])
       next.set(key, String(fields.get(key) ?? ''))
@@ -83,68 +109,55 @@ export function CatalogPage({
               </button>
             </div>
             <div className={styles.filters}>
-              <div>
-                <label htmlFor="branch-filter">{t('catalog.branch')}</label>
-                <select
-                  id="branch-filter"
-                  name="branch"
-                  value={effectiveQuery.branch}
-                  onChange={(e) => e.currentTarget.form?.requestSubmit()}
-                >
-                  <option value="">{t('catalog.allBranches')}</option>
-                  {metadata.branches.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="availability-filter">
-                  {t('catalog.availability')}
-                </label>
-                <select
-                  id="availability-filter"
-                  name="availability"
-                  value={effectiveQuery.availability}
-                  onChange={(e) => e.currentTarget.form?.requestSubmit()}
-                >
-                  <option value="">{t('catalog.allStatuses')}</option>
-                  {availabilityStatuses.map((status) => (
-                    <option key={status} value={status}>
-                      {t(`statuses.${status}`)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="form-filter">{t('catalog.form')}</label>
-                <select
-                  id="form-filter"
-                  name="form"
-                  value={effectiveQuery.form}
-                  onChange={(e) => e.currentTarget.form?.requestSubmit()}
-                >
-                  <option value="">{t('catalog.allForms')}</option>
-                  {metadata.forms.map((form) => (
-                    <option key={form} value={form}>
-                      {t(`forms.${form}`, { defaultValue: form })}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="sort-filter">{t('catalog.sort')}</label>
-                <select
-                  id="sort-filter"
-                  name="sort"
-                  value={effectiveQuery.sort}
-                  onChange={(e) => e.currentTarget.form?.requestSubmit()}
-                >
-                  <option value="name">{t('catalog.sortName')}</option>
-                  <option value="price">{t('catalog.sortPrice')}</option>
-                </select>
-              </div>
+              <Select
+                label={t('catalog.branch')}
+                name="branch"
+                value={effectiveQuery.branch}
+                onChange={(value) => select('branch', value)}
+                options={[
+                  { value: '', label: t('catalog.allBranches') },
+                  ...metadata.branches.map((b) => ({
+                    value: b.id,
+                    label: b.name,
+                  })),
+                ]}
+              />
+              <Select
+                label={t('catalog.availability')}
+                name="availability"
+                value={effectiveQuery.availability}
+                onChange={(value) => select('availability', value)}
+                options={[
+                  { value: '', label: t('catalog.allStatuses') },
+                  ...availabilityStatuses.map((status) => ({
+                    value: status,
+                    label: t(`statuses.${status}`),
+                  })),
+                ]}
+              />
+              <Select
+                label={t('catalog.form')}
+                name="form"
+                value={effectiveQuery.form}
+                onChange={(value) => select('form', value)}
+                options={[
+                  { value: '', label: t('catalog.allForms') },
+                  ...metadata.forms.map((form) => ({
+                    value: form,
+                    label: t(`forms.${form}`, { defaultValue: form }),
+                  })),
+                ]}
+              />
+              <Select
+                label={t('catalog.sort')}
+                name="sort"
+                value={effectiveQuery.sort}
+                onChange={(value) => select('sort', value)}
+                options={[
+                  { value: 'name', label: t('catalog.sortName') },
+                  { value: 'price', label: t('catalog.sortPrice') },
+                ]}
+              />
             </div>
             <div className={styles.controlFooter}>
               <p>

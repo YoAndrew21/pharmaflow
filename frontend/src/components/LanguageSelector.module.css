@@ -1,36 +1,5 @@
 .control {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
   min-width: 0;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-.control select {
-  min-width: 0;
-  max-width: 100%;
-  min-height: var(--control-min-size);
-  padding: var(--space-2);
-  border: 1px solid var(--border-interactive);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  background: var(--surface);
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    background var(--duration-fast) var(--ease-out);
-}
-.control select:hover:not(:disabled) {
-  border-color: var(--accent-text);
-  background: var(--surface-soft);
-}
-@media (min-width: 60rem) {
-  .label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
 }

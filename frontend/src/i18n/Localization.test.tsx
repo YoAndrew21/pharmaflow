@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
+import { chooseOption, selectTrigger } from '../test/select'
 import { App } from '../app/App'
 import i18n from './index'
 import { LOCALE_KEY } from '../features/preferences/locale'
@@ -49,8 +50,8 @@ describe('language changes in the complete shell', () => {
       expect(
         screen.getByRole('button', { name: r.visual.next }),
       ).toHaveAttribute('aria-controls', track.id)
-      expect(screen.getByRole('combobox', { name: r.language })).toHaveValue(
-        locale,
+      expect(selectTrigger(r.language)).toHaveTextContent(
+        { en: 'English', es: 'Español', ja: '日本語' }[locale],
       )
       for (const label of [r.nav.home, r.nav.catalog, r.nav.pharmacies]) {
         expect(
@@ -183,9 +184,12 @@ describe('language changes in the complete shell', () => {
       localStorage.setItem('pharmaflow:favorites', bookmarks)
       const view = render(<App />)
       await screen.findByText('1 presentation found')
-      const selector = screen.getByRole('combobox', { name: 'Language' })
+      const selector = selectTrigger('Language')
       selector.focus()
-      await userEvent.selectOptions(selector, locale)
+      await chooseOption(
+        selector,
+        { en: 'English', es: 'Español', ja: '日本語' }[locale],
+      )
       await screen.findByRole('heading', { name: title, level: 1 })
       expect(document.documentElement.lang).toBe(locale)
       expect(document.title).toBe(`${title} | PharmaFlow`)
@@ -211,16 +215,16 @@ describe('language changes in the complete shell', () => {
       expect(
         view.container.querySelector('div[aria-live="polite"]'),
       ).toHaveTextContent(i18n.t('domain.packages.med-par-1000'))
-      await userEvent.selectOptions(selector, 'en')
+      await chooseOption(selector, 'English')
       expect(
         view.container.querySelector('div[aria-live="polite"]'),
       ).toHaveTextContent('Demo pack · 10 tablets')
       expect(window.location.pathname + window.location.search).toBe(query)
       await userEvent.click(within(card).getByRole('link'))
       await screen.findByRole('heading', { level: 1, name: 'Paracetamol' })
-      await userEvent.selectOptions(
-        screen.getByRole('combobox', { name: 'Language' }),
-        locale,
+      await chooseOption(
+        selectTrigger('Language'),
+        { en: 'English', es: 'Español', ja: '日本語' }[locale],
       )
       await waitFor(() =>
         expect(document.title).toBe(
@@ -241,9 +245,9 @@ describe('language changes in the complete shell', () => {
         level: 1,
         name: 'Medication not found',
       })
-      await userEvent.selectOptions(
-        screen.getByRole('combobox', { name: 'Language' }),
-        locale,
+      await chooseOption(
+        selectTrigger('Language'),
+        { en: 'English', es: 'Español', ja: '日本語' }[locale],
       )
       await waitFor(() => expect(document.title).toBe(`${title} | PharmaFlow`))
       expect(
@@ -258,12 +262,9 @@ describe('language changes in the complete shell', () => {
       throw new Error('quota')
     })
     try {
-      await userEvent.selectOptions(
-        screen.getByRole('combobox', { name: 'Language' }),
-        'ja',
-      )
+      await chooseOption(selectTrigger('Language'), '日本語')
       expect(document.documentElement.lang).toBe('ja')
-      expect(screen.getByRole('combobox', { name: '言語' })).toHaveValue('ja')
+      expect(selectTrigger('言語')).toHaveTextContent('日本語')
       await act(() => i18n.changeLanguage('en'))
     } finally {
       vi.restoreAllMocks()

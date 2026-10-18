@@ -42,25 +42,6 @@
 .filters > div {
   min-width: 0;
 }
-.filters label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: var(--space-2);
-}
-.filters select {
-  width: 100%;
-  min-width: 0;
-  min-height: var(--control-min-size);
-  padding: 0.65rem var(--space-2);
-  border: 1px solid var(--border-interactive);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--text);
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    background var(--duration-fast) var(--ease-out);
-}
 .controlFooter {
   display: flex;
   flex-wrap: wrap;
@@ -206,10 +187,6 @@
   color: var(--muted);
   font-size: 0.75rem;
   margin-block: 1.5rem 0;
-}
-.filters select:hover:not(:disabled) {
-  border-color: var(--accent-text);
-  background: var(--surface-soft);
 }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .card:hover {

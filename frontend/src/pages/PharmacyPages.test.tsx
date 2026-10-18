@@ -1,3 +1,4 @@
+import { chooseOption, selectTrigger } from '../test/select'
 import { FavoritesProvider } from '../features/favorites/FavoritesContext'
 import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -280,26 +281,21 @@ describe('branch navigation integrations', () => {
       screen.getByRole('link', { name: 'Browse medications at this branch' }),
     )
     await screen.findByText('9 presentations found')
-    expect(screen.getByLabelText('Pharmacy branch')).toHaveValue(
-      'lantern-court',
-    )
+    expect(selectTrigger('Pharmacy branch')).toHaveTextContent('Lantern Court')
     const paracetamol = screen.getByRole('article', {
       name: 'Paracetamol · 500 mg',
     })
     expect(within(paracetamol).getByText('Unavailable')).toBeInTheDocument()
     expect(within(paracetamol).getByText(/USD\s2.00/)).toBeInTheDocument()
     expect(within(paracetamol).queryByText(/From USD/)).not.toBeInTheDocument()
-    await userEvent.selectOptions(
-      screen.getByLabelText('Pharmacy branch'),
-      'aster-commons',
-    )
+    await chooseOption(selectTrigger('Pharmacy branch'), 'Aster Commons')
     await screen.findByText(
       /Availability and reference prices refer only to Aster Commons/,
     )
     await userEvent.click(
       screen.getByRole('button', { name: 'Clear search & filters' }),
     )
-    expect(screen.getByLabelText('Pharmacy branch')).toHaveValue('')
+    expect(selectTrigger('Pharmacy branch')).toHaveTextContent('All branches')
     expect(await screen.findByText(/From USD\s3.20/)).toBeInTheDocument()
   })
   it('links only branch identity from medication comparison, preserving its semantics', async () => {

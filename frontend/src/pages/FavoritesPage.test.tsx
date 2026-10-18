@@ -1,3 +1,4 @@
+import { selectTrigger } from '../test/select'
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
@@ -144,9 +145,10 @@ describe('local favorites workflow', () => {
         screen.getByRole('article', { name: 'Paracetamol · 500 mg' }),
       ).getByRole('button'),
     )
-    expect(screen.getByLabelText('Pharmacy branch')).toHaveValue(
-      'aster-commons',
-    )
+    expect(selectTrigger('Pharmacy branch')).toHaveTextContent('Aster Commons')
+    expect(
+      new FormData(screen.getByRole('search') as HTMLFormElement).get('branch'),
+    ).toBe('aster-commons')
     expect(screen.getByRole('searchbox')).toHaveValue('para')
     expect(
       screen.getByRole('link', { name: 'Favorites, 0 saved presentations' }),

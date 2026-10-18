@@ -1,3 +1,4 @@
+import { selectTrigger } from '../test/select'
 import { FavoritesProvider } from '../features/favorites/FavoritesContext'
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -194,8 +195,9 @@ describe('medication detail workflow', () => {
     await userEvent.click(screen.getByRole('link', { name: 'Back to catalog' }))
     await screen.findByText('1 presentation found')
     expect(screen.getByRole('searchbox')).toHaveValue('para')
-    expect(screen.getByLabelText('Pharmacy branch')).toHaveValue(
-      'aster-commons',
-    )
+    expect(selectTrigger('Pharmacy branch')).toHaveTextContent('Aster Commons')
+    expect(
+      new FormData(screen.getByRole('search') as HTMLFormElement).get('branch'),
+    ).toBe('aster-commons')
   })
 })
