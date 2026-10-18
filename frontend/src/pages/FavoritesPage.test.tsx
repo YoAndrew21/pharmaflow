@@ -39,10 +39,13 @@ function setup(
               path="/favorites"
               element={<FavoritesPage reader={reader} />}
             />
-            <Route path="/catalog" element={<CatalogPage />} />
+            <Route
+              path="/catalog"
+              element={<CatalogPage reader={localCatalogReader} />}
+            />
             <Route
               path="/medications/:slug"
-              element={<MedicationDetailPage />}
+              element={<MedicationDetailPage reader={localCatalogReader} />}
             />
           </Route>
         </Routes>

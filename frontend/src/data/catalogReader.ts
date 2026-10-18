@@ -1,14 +1,17 @@
 import type { Availability, Medication, PharmacyBranch } from '../domain/models'
 import type { CatalogQuery, CatalogResult } from '../domain/catalog'
 
-/** A small read boundary. Future local/API implementations preserve these domain shapes.
- * Discovery projections keep query rules behind the boundary for the future API adapter.
+/** A small asynchronous read boundary shared by HTTP runtime and local test readers.
+ * Discovery currently applies pure frontend query rules to HTTP-sourced records.
  */
 export interface CatalogReader {
-  discover(query: CatalogQuery): Promise<CatalogResult>
-  listMedications(): Promise<readonly Medication[]>
-  getMedication(slug: string): Promise<Medication | null>
-  listBranches(): Promise<readonly PharmacyBranch[]>
-  getBranch(slug: string): Promise<PharmacyBranch | null>
-  getAvailability(medicationId: string): Promise<readonly Availability[]>
+  discover(query: CatalogQuery, signal?: AbortSignal): Promise<CatalogResult>
+  listMedications(signal?: AbortSignal): Promise<readonly Medication[]>
+  getMedication(slug: string, signal?: AbortSignal): Promise<Medication | null>
+  listBranches(signal?: AbortSignal): Promise<readonly PharmacyBranch[]>
+  getBranch(slug: string, signal?: AbortSignal): Promise<PharmacyBranch | null>
+  getAvailability(
+    medicationId: string,
+    signal?: AbortSignal,
+  ): Promise<readonly Availability[]>
 }

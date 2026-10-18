@@ -15,7 +15,10 @@ function setup(reader: CatalogReader = localCatalogReader) {
       <MemoryRouter>
         <Routes>
           <Route path="/" element={<HomePage reader={reader} />} />
-          <Route path="/catalog" element={<CatalogPage />} />
+          <Route
+            path="/catalog"
+            element={<CatalogPage reader={localCatalogReader} />}
+          />
         </Routes>
       </MemoryRouter>
     </FavoritesProvider>,
@@ -29,7 +32,10 @@ describe('Home discovery reads', () => {
     const list = await screen.findByRole('list', {
       name: 'A little exploration. More clarity.',
     })
-    expect(discover).toHaveBeenCalledWith(defaultCatalogQuery)
+    expect(discover).toHaveBeenCalledWith(
+      defaultCatalogQuery,
+      expect.any(AbortSignal),
+    )
     const data = await localCatalogReader.discover(defaultCatalogQuery)
     expect(within(list).getAllByRole('article')).toHaveLength(data.items.length)
     for (const { medication } of data.items) {

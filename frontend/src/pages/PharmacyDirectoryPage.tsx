@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import type { CatalogReader } from '../data/catalogReader'
-import { localCatalogReader } from '../data/localCatalogReader'
+import { runtimeCatalogReader } from '../data/runtimeCatalogReader'
 import { OpeningHours } from '../features/pharmacies/OpeningHours'
 import { useBranchDirectory } from '../features/pharmacies/useBranches'
 import styles from '../features/pharmacies/Pharmacies.module.css'
@@ -11,7 +11,7 @@ import { StateArtwork } from '../components/StateArtwork'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function PharmacyDirectoryPage({
-  reader = localCatalogReader,
+  reader = runtimeCatalogReader,
 }: {
   reader?: CatalogReader
 }) {

@@ -30,7 +30,10 @@ function setup(
             path="/medications/:slug"
             element={<MedicationDetailPage reader={reader} />}
           />
-          <Route path="/catalog" element={<CatalogPage />} />
+          <Route
+            path="/catalog"
+            element={<CatalogPage reader={localCatalogReader} />}
+          />
         </Routes>
         <NavigateOther />
       </MemoryRouter>

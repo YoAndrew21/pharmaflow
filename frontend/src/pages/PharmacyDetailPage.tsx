@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import type { CatalogReader } from '../data/catalogReader'
-import { localCatalogReader } from '../data/localCatalogReader'
+import { runtimeCatalogReader } from '../data/runtimeCatalogReader'
 import { OpeningHours } from '../features/pharmacies/OpeningHours'
 import { useBranchDetail } from '../features/pharmacies/useBranches'
 import { serializeCatalogQuery } from '../features/catalog/queryParams'
@@ -14,7 +14,7 @@ import { StateArtwork } from '../components/StateArtwork'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function PharmacyDetailPage({
-  reader = localCatalogReader,
+  reader = runtimeCatalogReader,
 }: {
   reader?: CatalogReader
 }) {

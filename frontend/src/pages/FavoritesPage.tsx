@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import type { CatalogReader } from '../data/catalogReader'
-import { localCatalogReader } from '../data/localCatalogReader'
+import { runtimeCatalogReader } from '../data/runtimeCatalogReader'
 import { MedicationCard } from '../features/catalog/MedicationCard'
 import { useFavorites } from '../features/favorites/useFavorites'
 import { useFavoriteCatalog } from '../features/favorites/useFavoriteCatalog'
@@ -12,7 +12,7 @@ import { StateArtwork } from '../components/StateArtwork'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function FavoritesPage({
-  reader = localCatalogReader,
+  reader = runtimeCatalogReader,
 }: {
   reader?: CatalogReader
 }) {

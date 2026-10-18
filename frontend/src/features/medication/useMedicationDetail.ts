@@ -26,9 +26,10 @@ export function useMedicationDetail(
   } | null>(null)
   useEffect(() => {
     let active = true
+    const controller = new AbortController()
     async function read() {
       try {
-        const medication = await reader.getMedication(slug)
+        const medication = await reader.getMedication(slug, controller.signal)
         if (!active) return
         if (!medication) {
           setResponse({
@@ -40,8 +41,8 @@ export function useMedicationDetail(
           return
         }
         const [branches, observations] = await Promise.all([
-          reader.listBranches(),
-          reader.getAvailability(medication.id),
+          reader.listBranches(controller.signal),
+          reader.getAvailability(medication.id, controller.signal),
         ])
         if (active)
           setResponse({
@@ -66,6 +67,7 @@ export function useMedicationDetail(
     void read()
     return () => {
       active = false
+      controller.abort()
     }
   }, [reader, slug, attempt])
   return response?.slug === slug &&

@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { SearchField } from '../components/SearchField'
 import type { CatalogReader } from '../data/catalogReader'
-import { localCatalogReader } from '../data/localCatalogReader'
+import { runtimeCatalogReader } from '../data/runtimeCatalogReader'
 import { availabilityStatuses, normalizeCatalogQuery } from '../domain/catalog'
 import {
   parseCatalogQuery,
@@ -16,7 +16,7 @@ import { StateArtwork } from '../components/StateArtwork'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function CatalogPage({
-  reader = localCatalogReader,
+  reader = runtimeCatalogReader,
 }: {
   reader?: CatalogReader
 }) {

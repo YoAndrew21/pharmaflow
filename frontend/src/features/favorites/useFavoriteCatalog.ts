@@ -18,12 +18,13 @@ export function useFavoriteCatalog(
   } | null>(null)
   useEffect(() => {
     let active = true
+    const controller = new AbortController()
     void (async () => {
       try {
         // Only listMedications is the complete authoritative lookup for stale IDs.
         const [medications, catalog] = await Promise.all([
-          reader.listMedications(),
-          reader.discover(defaultCatalogQuery),
+          reader.listMedications(controller.signal),
+          reader.discover(defaultCatalogQuery, controller.signal),
         ])
         if (active)
           setResponse({
@@ -48,6 +49,7 @@ export function useFavoriteCatalog(
     })()
     return () => {
       active = false
+      controller.abort()
     }
   }, [reader, attempt])
   return response?.reader === reader && response.attempt === attempt

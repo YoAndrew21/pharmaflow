@@ -6,12 +6,14 @@ import i18n from './index'
 import { LOCALE_KEY } from '../features/preferences/locale'
 import { resources } from './index'
 import { localCatalogReader } from '../data/localCatalogReader'
+import { installCanonicalFetch } from '../test/apiFetch'
 import {
   formatDemoPrice,
   formatDemoTimestamp,
 } from '../features/availability/formatters'
 
 beforeEach(() => {
+  installCanonicalFetch()
   localStorage.clear()
   vi.stubGlobal(
     'matchMedia',

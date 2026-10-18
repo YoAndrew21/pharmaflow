@@ -18,13 +18,13 @@ import { LoadingMark } from '../components/LoadingMark'
 import { DiscoveryCarousel } from '../components/DiscoveryCarousel'
 import { MedicationCard } from '../features/catalog/MedicationCard'
 import { useCatalog } from '../features/catalog/useCatalog'
-import { localCatalogReader } from '../data/localCatalogReader'
+import { runtimeCatalogReader } from '../data/runtimeCatalogReader'
 import type { CatalogReader } from '../data/catalogReader'
 import { defaultCatalogQuery } from '../domain/catalog'
 import { serializeCatalogQuery } from '../features/catalog/queryParams'
 
 export function HomePage({
-  reader = localCatalogReader,
+  reader = runtimeCatalogReader,
 }: {
   reader?: CatalogReader
 }) {

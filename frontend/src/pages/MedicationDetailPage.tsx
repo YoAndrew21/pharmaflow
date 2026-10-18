@@ -3,7 +3,7 @@ import { ArrowLeft, Info } from 'lucide-react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import type { CatalogReader } from '../data/catalogReader'
-import { localCatalogReader } from '../data/localCatalogReader'
+import { runtimeCatalogReader } from '../data/runtimeCatalogReader'
 import { buildBranchComparison } from '../domain/branchComparison'
 import { BranchComparison } from '../features/availability/BranchComparison'
 import { catalogReturnPath } from '../features/catalog/navigation'
@@ -15,7 +15,7 @@ import { StateArtwork } from '../components/StateArtwork'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function MedicationDetailPage({
-  reader = localCatalogReader,
+  reader = runtimeCatalogReader,
 }: {
   reader?: CatalogReader
 }) {

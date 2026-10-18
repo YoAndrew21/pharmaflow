@@ -272,8 +272,11 @@ it('Home search navigates to the functional catalog with an encoded ingredient q
     <FavoritesProvider storage={null}>
       <MemoryRouter initialEntries={['/']}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/" element={<HomePage reader={localCatalogReader} />} />
+          <Route
+            path="/catalog"
+            element={<CatalogPage reader={localCatalogReader} />}
+          />
         </Routes>
         <HistoryControls />
       </MemoryRouter>

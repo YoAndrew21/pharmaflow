@@ -49,8 +49,14 @@ function setup(
             path="/pharmacies/:slug"
             element={<PharmacyDetailPage reader={reader} />}
           />
-          <Route path="/medications/:slug" element={<MedicationDetailPage />} />
-          <Route path="/catalog" element={<CatalogPage />} />
+          <Route
+            path="/medications/:slug"
+            element={<MedicationDetailPage reader={localCatalogReader} />}
+          />
+          <Route
+            path="/catalog"
+            element={<CatalogPage reader={localCatalogReader} />}
+          />
         </Routes>
         <Navigation />
       </MemoryRouter>
