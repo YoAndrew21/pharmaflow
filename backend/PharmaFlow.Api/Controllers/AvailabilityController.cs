@@ -10,5 +10,6 @@ public sealed class AvailabilityController(IAvailabilityService availabilityServ
 {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<Availability>>(StatusCodes.Status200OK)]
-    public ActionResult<IReadOnlyList<Availability>> GetAll() => Ok(availabilityService.GetAll());
+    public async Task<ActionResult<IReadOnlyList<Availability>>> GetAll(CancellationToken cancellationToken) =>
+        Ok(await availabilityService.GetAllAsync(cancellationToken));
 }

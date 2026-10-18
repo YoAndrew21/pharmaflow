@@ -4,6 +4,6 @@ namespace PharmaFlow.Api.Services;
 
 public interface IPharmacyService
 {
-    IReadOnlyList<PharmacyBranch> GetAll();
-    PharmacyBranch? GetBySlug(string slug);
+    Task<IReadOnlyList<PharmacyBranch>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<PharmacyBranch?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default);
 }

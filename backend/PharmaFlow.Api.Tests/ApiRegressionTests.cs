@@ -1,11 +1,15 @@
 using System.Net;
 using System.Text.Json.Nodes;
 using Xunit;
+using PharmaFlow.Api.Tests.Infrastructure;
 
 namespace PharmaFlow.Api.Tests;
 
-public sealed class ApiRegressionTests(ApiFactory factory) : IClassFixture<ApiFactory>
+[Collection(PostgresCollection.Name)]
+public sealed class ApiRegressionTests(PostgresFixture fixture)
 {
+    private PostgresApiFactory factory => fixture.Factory;
+
     [Theory]
     [InlineData("/api/medications", "POST")]
     [InlineData("/api/medications", "PUT")]

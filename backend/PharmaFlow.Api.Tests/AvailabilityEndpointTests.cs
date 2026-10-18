@@ -1,11 +1,15 @@
 using System.Globalization;
 using System.Text.Json.Nodes;
 using Xunit;
+using PharmaFlow.Api.Tests.Infrastructure;
 
 namespace PharmaFlow.Api.Tests;
 
-public sealed class AvailabilityEndpointTests(ApiFactory factory) : IClassFixture<ApiFactory>
+[Collection(PostgresCollection.Name)]
+public sealed class AvailabilityEndpointTests(PostgresFixture fixture)
 {
+    private PostgresApiFactory factory => fixture.Factory;
+
     [Fact]
     public async Task Observation_references_match_canonical_medications_and_branches()
     {

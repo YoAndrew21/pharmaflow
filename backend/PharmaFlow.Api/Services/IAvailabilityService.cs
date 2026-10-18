@@ -4,5 +4,5 @@ namespace PharmaFlow.Api.Services;
 
 public interface IAvailabilityService
 {
-    IReadOnlyList<Availability> GetAll();
+    Task<IReadOnlyList<Availability>> GetAllAsync(CancellationToken cancellationToken = default);
 }

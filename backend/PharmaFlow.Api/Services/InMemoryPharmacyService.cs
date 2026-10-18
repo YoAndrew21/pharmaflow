@@ -31,6 +31,18 @@ public sealed class InMemoryPharmacyService : IPharmacyService
 
     public IReadOnlyList<PharmacyBranch> GetAll() => branches;
 
+    public Task<IReadOnlyList<PharmacyBranch>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(GetAll());
+    }
+
+    public Task<PharmacyBranch?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(GetBySlug(slug));
+    }
+
     public PharmacyBranch? GetBySlug(string slug) => branches.FirstOrDefault(
         branch => string.Equals(branch.Slug, slug, StringComparison.Ordinal));
 

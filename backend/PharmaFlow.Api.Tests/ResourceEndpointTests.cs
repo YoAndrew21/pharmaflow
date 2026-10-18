@@ -1,11 +1,15 @@
 using System.Net;
 using System.Text.Json.Nodes;
 using Xunit;
+using PharmaFlow.Api.Tests.Infrastructure;
 
 namespace PharmaFlow.Api.Tests;
 
-public sealed class ResourceEndpointTests(ApiFactory factory) : IClassFixture<ApiFactory>
+[Collection(PostgresCollection.Name)]
+public sealed class ResourceEndpointTests(PostgresFixture fixture)
 {
+    private PostgresApiFactory factory => fixture.Factory;
+
     [Theory]
     [InlineData("medications", "medications", 9)]
     [InlineData("pharmacies", "branches", 3)]

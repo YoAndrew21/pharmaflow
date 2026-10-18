@@ -31,6 +31,18 @@ public sealed class InMemoryMedicationService : IMedicationService
 
     public IReadOnlyList<Medication> GetAll() => medications;
 
+    public Task<IReadOnlyList<Medication>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(GetAll());
+    }
+
+    public Task<Medication?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(GetBySlug(slug));
+    }
+
     public Medication? GetBySlug(string slug) => medications.FirstOrDefault(
         medication => string.Equals(medication.Slug, slug, StringComparison.Ordinal));
 }

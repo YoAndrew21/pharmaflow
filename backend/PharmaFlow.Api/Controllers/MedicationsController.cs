@@ -10,14 +10,15 @@ public sealed class MedicationsController(IMedicationService medicationService) 
 {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<Medication>>(StatusCodes.Status200OK)]
-    public ActionResult<IReadOnlyList<Medication>> GetAll() => Ok(medicationService.GetAll());
+    public async Task<ActionResult<IReadOnlyList<Medication>>> GetAll(CancellationToken cancellationToken) =>
+        Ok(await medicationService.GetAllAsync(cancellationToken));
 
     [HttpGet("{slug}")]
     [ProducesResponseType<Medication>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    public ActionResult<Medication> GetBySlug(string slug)
+    public async Task<ActionResult<Medication>> GetBySlug(string slug, CancellationToken cancellationToken)
     {
-        var medication = medicationService.GetBySlug(slug);
+        var medication = await medicationService.GetBySlugAsync(slug, cancellationToken);
         if (medication is null)
         {
             return NotFound();

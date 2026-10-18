@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args.Where(argument => argument != "-
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Registration is lazy; current services remain in memory and do not resolve or connect this context.
+// Registration and reader construction are lazy; startup never opens a database connection.
 builder.Services.AddDbContext<PharmaFlowDbContext>(options =>
 {
     var connectionString = new NpgsqlConnectionStringBuilder(
@@ -21,9 +21,10 @@ builder.Services.AddDbContext<PharmaFlowDbContext>(options =>
     };
     options.UseNpgsql(connectionString.ConnectionString);
 });
-builder.Services.AddSingleton<IMedicationService, InMemoryMedicationService>();
-builder.Services.AddSingleton<IPharmacyService, InMemoryPharmacyService>();
-builder.Services.AddSingleton<IAvailabilityService, InMemoryAvailabilityService>();
+builder.Services.AddSingleton<CanonicalCatalogOrder>();
+builder.Services.AddScoped<IMedicationService, DatabaseMedicationService>();
+builder.Services.AddScoped<IPharmacyService, DatabasePharmacyService>();
+builder.Services.AddScoped<IAvailabilityService, DatabaseAvailabilityService>();
 builder.Services.AddScoped<CanonicalDatabaseSeeder>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -42,9 +43,6 @@ if (seedRequested)
     }
     return;
 }
-
-// Fail startup clearly if canonical observations reference missing medication or branch identities.
-_ = app.Services.GetRequiredService<IAvailabilityService>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

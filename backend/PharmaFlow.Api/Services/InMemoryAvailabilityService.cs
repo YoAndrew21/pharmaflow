@@ -9,7 +9,7 @@ public sealed class InMemoryAvailabilityService : IAvailabilityService
 {
     private readonly IReadOnlyList<Availability> observations;
 
-    public InMemoryAvailabilityService(IMedicationService medicationService, IPharmacyService pharmacyService)
+    public InMemoryAvailabilityService()
     {
         using var stream = typeof(InMemoryAvailabilityService).Assembly
             .GetManifestResourceStream("PharmaFlow.Api.CanonicalCatalog.json")
@@ -23,9 +23,9 @@ public sealed class InMemoryAvailabilityService : IAvailabilityService
             .Deserialize<Availability[]>(options)
             ?? throw new InvalidOperationException("The canonical availability array is missing.");
 
-        var medicationIds = medicationService.GetAll().Select(medication => medication.Id)
+        var medicationIds = dataset.RootElement.GetProperty("medications").EnumerateArray().Select(row => row.GetProperty("id").GetString())
             .ToHashSet(StringComparer.Ordinal);
-        var branchIds = pharmacyService.GetAll().Select(branch => branch.Id)
+        var branchIds = dataset.RootElement.GetProperty("branches").EnumerateArray().Select(row => row.GetProperty("id").GetString())
             .ToHashSet(StringComparer.Ordinal);
         var pairs = new HashSet<(string MedicationId, string BranchId)>();
 
@@ -52,4 +52,10 @@ public sealed class InMemoryAvailabilityService : IAvailabilityService
     }
 
     public IReadOnlyList<Availability> GetAll() => observations;
+
+    public Task<IReadOnlyList<Availability>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(GetAll());
+    }
 }

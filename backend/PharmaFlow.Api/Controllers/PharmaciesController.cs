@@ -10,14 +10,15 @@ public sealed class PharmaciesController(IPharmacyService pharmacyService) : Con
 {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<PharmacyBranch>>(StatusCodes.Status200OK)]
-    public ActionResult<IReadOnlyList<PharmacyBranch>> GetAll() => Ok(pharmacyService.GetAll());
+    public async Task<ActionResult<IReadOnlyList<PharmacyBranch>>> GetAll(CancellationToken cancellationToken) =>
+        Ok(await pharmacyService.GetAllAsync(cancellationToken));
 
     [HttpGet("{slug}")]
     [ProducesResponseType<PharmacyBranch>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    public ActionResult<PharmacyBranch> GetBySlug(string slug)
+    public async Task<ActionResult<PharmacyBranch>> GetBySlug(string slug, CancellationToken cancellationToken)
     {
-        var branch = pharmacyService.GetBySlug(slug);
+        var branch = await pharmacyService.GetBySlugAsync(slug, cancellationToken);
         if (branch is null)
         {
             return NotFound();
