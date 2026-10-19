@@ -118,6 +118,7 @@ export const en = {
       'This page is not part of the current demo. Return home to explore PharmaFlow.',
   },
   search: {
+    clear: 'Clear search text',
     label: 'Medication name or active ingredient',
     placeholder: 'For example, paracetamol',
     submit: 'Search catalog',

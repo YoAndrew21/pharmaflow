@@ -27,6 +27,28 @@ function setup(reader: CatalogReader = localCatalogReader) {
 }
 
 describe('Home discovery reads', () => {
+  it('clears the Home draft without navigating and uses the empty value on the next submit', async () => {
+    const user = userEvent.setup()
+    setup()
+    const homeTitle = screen.getByRole('heading', { level: 1 })
+    const input = screen.getByRole('searchbox')
+    await user.type(input, 'para')
+    await user.tab()
+    const clear = screen.getByRole('button', { name: 'Clear search text' })
+    expect(clear).toHaveFocus()
+    await user.keyboard('{Enter}')
+    expect(input).toHaveValue('')
+    expect(input).toHaveFocus()
+    expect(homeTitle).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: 'Medication catalog' }),
+    ).not.toBeInTheDocument()
+    expect(new FormData(input.closest('form')!).get('q')).toBe('')
+    await user.keyboard('{Enter}')
+    await screen.findByRole('heading', { name: 'Medication catalog' })
+    await screen.findByText('9 presentations found')
+    expect(screen.getByRole('searchbox')).toHaveValue('')
+  })
   it('uses canonical discovery presentations, forms and branches with meaningful heading levels', async () => {
     const discover = vi.fn(localCatalogReader.discover)
     setup({ ...localCatalogReader, discover })

@@ -23,6 +23,12 @@ it('keeps the native theme action named, keyboard operable, and persisted', asyn
   render(<ThemeToggle />)
   const toggle = screen.getByRole('button', { name: 'Switch to dark theme' })
   expect(toggle).toHaveAttribute('type', 'button')
+  expect(toggle).toHaveAttribute('data-theme', 'light')
+  expect(toggle.querySelectorAll('svg')).toHaveLength(2)
+  for (const icon of toggle.querySelectorAll('svg')) {
+    expect(icon).toHaveAttribute('aria-hidden', 'true')
+    expect(icon.parentElement).toHaveAttribute('aria-hidden', 'true')
+  }
   await userEvent.tab()
   expect(toggle).toHaveFocus()
   await userEvent.keyboard(' ')
@@ -30,10 +36,12 @@ it('keeps the native theme action named, keyboard operable, and persisted', asyn
   expect(document.documentElement.style.colorScheme).toBe('dark')
   expect(localStorage.getItem(THEME_KEY)).toBe('dark')
   expect(toggle).toHaveAccessibleName('Switch to light theme')
+  expect(toggle).toHaveAttribute('data-theme', 'dark')
   await userEvent.keyboard('{Enter}')
   expect(document.documentElement.dataset.theme).toBe('light')
   expect(localStorage.getItem(THEME_KEY)).toBe('light')
   expect(toggle).toHaveAccessibleName('Switch to dark theme')
+  expect(toggle).toHaveAttribute('data-theme', 'light')
 })
 
 it('preserves a stored theme over the initial system preference', () => {

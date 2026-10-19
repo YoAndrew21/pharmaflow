@@ -24,18 +24,18 @@ export function ThemeToggle() {
 
   return (
     <button
-      className={`utility-button ${styles.toggle}`}
+      className={styles.toggle}
+      data-theme={theme}
       type="button"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       aria-label={t(
         theme === 'light' ? 'theme.switchDark' : 'theme.switchLight',
       )}
     >
-      {theme === 'light' ? (
-        <Moon size={18} aria-hidden="true" />
-      ) : (
-        <Sun size={18} aria-hidden="true" />
-      )}
+      <span className={styles.track} aria-hidden="true">
+        <Sun className={styles.day} size={16} aria-hidden="true" />
+        <Moon className={styles.night} size={16} aria-hidden="true" />
+      </span>
       <span className={styles.label}>
         {t(theme === 'light' ? 'theme.dark' : 'theme.light')}
       </span>

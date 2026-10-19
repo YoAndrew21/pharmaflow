@@ -52,6 +52,79 @@ function deferred<T>() {
 }
 
 describe('catalog workflow', () => {
+  it.each(['Enter', 'button'])(
+    'clears only the draft, then removes q on %s submission while keeping filters and history',
+    async (method) => {
+      const user = userEvent.setup()
+      const discover = vi.fn(localCatalogReader.discover)
+      const initial =
+        '/catalog?q=para&branch=aster-commons&availability=low-stock&form=tablet&sort=price'
+      renderCatalog(initial, { ...localCatalogReader, discover })
+      await screen.findByText('1 presentation found')
+      const reads = discover.mock.calls.length
+      const input = screen.getByRole('searchbox')
+      await user.click(
+        screen.getByRole('button', { name: 'Clear search text' }),
+      )
+      expect(input).toHaveValue('')
+      expect(input).toHaveFocus()
+      expect(screen.getByTestId('url')).toHaveTextContent(initial)
+      expect(screen.getByText('1 presentation found')).toBeInTheDocument()
+      expect(discover).toHaveBeenCalledTimes(reads)
+      expect(Object.fromEntries(new FormData(input.closest('form')!))).toEqual({
+        q: '',
+        branch: 'aster-commons',
+        availability: 'low-stock',
+        form: 'tablet',
+        sort: 'price',
+      })
+      if (method === 'Enter') await user.keyboard('{Enter}')
+      else
+        await user.click(screen.getByRole('button', { name: 'Search catalog' }))
+      await waitFor(() =>
+        expect(screen.getByTestId('url')).toHaveTextContent(
+          /^\/catalog\?branch=aster-commons&availability=low-stock&form=tablet&sort=price$/,
+        ),
+      )
+      expect(input).toHaveValue('')
+      expect(selectTrigger('Pharmacy branch')).toHaveTextContent(
+        'Aster Commons',
+      )
+      expect(selectTrigger('Availability')).toHaveTextContent('Low stock')
+      await user.click(screen.getByRole('button', { name: 'Go back' }))
+      expect(screen.getByTestId('url')).toHaveTextContent(initial)
+      expect(input).toHaveValue('para')
+      expect(
+        screen.getByRole('button', { name: 'Clear search text' }),
+      ).toBeInTheDocument()
+      await user.click(screen.getByRole('button', { name: 'Go forward' }))
+      expect(input).toHaveValue('')
+      expect(
+        screen.queryByRole('button', { name: 'Clear search text' }),
+      ).not.toBeInTheDocument()
+    },
+  )
+  it('passes the cleared draft to the existing immediate Select submission', async () => {
+    renderCatalog('/catalog?q=para&branch=aster-commons&form=tablet&sort=price')
+    await screen.findByText('3 presentations found')
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Clear search text' }),
+    )
+    expect(screen.getByTestId('url')).toHaveTextContent('q=para')
+    await chooseOption(selectTrigger('Availability'), 'Available')
+    await waitFor(() =>
+      expect(screen.getByTestId('url')).toHaveTextContent(
+        /^\/catalog\?branch=aster-commons&availability=available&form=tablet&sort=price$/,
+      ),
+    )
+    expect(screen.getByRole('searchbox')).toHaveValue('')
+    expect(
+      new FormData(screen.getByRole('search') as HTMLFormElement).get('q'),
+    ).toBe('')
+    expect(
+      screen.queryByRole('button', { name: 'Clear search text' }),
+    ).not.toBeInTheDocument()
+  })
   it('submits sequential committed selections exactly once and includes the current search draft', async () => {
     const user = userEvent.setup()
     const requestSubmit = vi.spyOn(HTMLFormElement.prototype, 'requestSubmit')

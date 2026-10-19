@@ -11,8 +11,8 @@
 .input {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding-inline: var(--space-4);
+  gap: var(--space-2);
+  padding-inline: var(--space-4) var(--space-2);
   border: 1px solid var(--border-interactive);
   background: var(--surface);
   border-radius: var(--radius-sm);
@@ -41,4 +41,58 @@
 .input input::placeholder {
   color: var(--muted);
   opacity: 1;
+}
+/* The authored clear action is the sole visible cancel control. */
+.input input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.clearSlot {
+  display: grid;
+  place-items: center;
+  flex: 0 0 var(--control-min-size);
+  width: var(--control-min-size);
+  height: var(--control-min-size);
+}
+.clear {
+  display: grid;
+  place-items: center;
+  width: var(--control-min-size);
+  height: var(--control-min-size);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  transition:
+    background var(--duration-fast),
+    border-color var(--duration-fast);
+}
+.clear:hover {
+  background: var(--surface-interactive);
+  border-color: var(--border-interactive);
+}
+.clear:active {
+  background: var(--accent-soft);
+}
+.clear:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus);
+  outline-offset: -3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .clear {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  .input,
+  .clear:hover {
+    border-color: ButtonText;
+  }
+  .clear svg {
+    color: ButtonText;
+  }
+  .clear:focus-visible {
+    outline-color: Highlight;
+  }
 }

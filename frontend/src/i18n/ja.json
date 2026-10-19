@@ -81,6 +81,7 @@
     "back": "ホームに戻る"
   },
   "search": {
+    "clear": "検索文字列を消去",
     "label": "医薬品名または有効成分",
     "placeholder": "例：paracetamol",
     "submit": "カタログを検索",

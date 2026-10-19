@@ -81,6 +81,7 @@
     "back": "Volver al inicio"
   },
   "search": {
+    "clear": "Borrar texto de búsqueda",
     "label": "Nombre del medicamento o principio activo",
     "placeholder": "Por ejemplo, paracetamol",
     "submit": "Buscar en el catálogo",

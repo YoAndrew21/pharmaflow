@@ -1,16 +1,108 @@
 .toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   min-width: var(--control-min-size);
+  min-height: var(--control-min-size);
+  padding: 6px var(--space-2);
+  border: 1px solid var(--border-interactive);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition:
+    background var(--duration-fast),
+    border-color var(--duration-fast);
+}
+.toggle:hover {
+  background: var(--surface-soft);
+  border-color: var(--accent-text);
+}
+.toggle:active {
+  border-color: var(--focus);
+}
+.toggle:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus);
+  outline-offset: var(--focus-ring-offset);
+}
+.track {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+  flex: 0 0 56px;
+  width: 56px;
+  height: 30px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(110deg, var(--surface-soft), var(--surface));
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.track::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--cyan);
+  border-radius: 50%;
+  background: var(--accent-soft);
+  box-shadow: 0 0 10px var(--glow);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast),
+    background var(--duration-fast);
+}
+.track svg {
+  position: relative;
+  color: var(--muted);
+}
+.toggle[data-theme='light'] .day {
+  color: var(--cyan);
+}
+.toggle[data-theme='dark'] .track::before {
+  transform: translateX(26px);
+  border-color: var(--violet);
+  background: var(--surface-interactive);
+}
+.toggle[data-theme='dark'] .night {
+  color: var(--cyan);
 }
 @media (min-width: 60rem), (max-width: 23rem) {
   .label {
     display: none;
   }
-  .toggle {
-    padding: 0.65rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .toggle,
+  .track::before {
+    transition: none;
   }
 }
-@media (min-width: 60rem) {
-  .toggle {
-    border-radius: var(--radius-pill);
+@media (forced-colors: active) {
+  .toggle,
+  .track {
+    background: Canvas;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+    box-shadow: none;
+  }
+  .toggle[data-theme] .track::before {
+    background: Highlight;
+    border-color: Highlight;
+    box-shadow: none;
+  }
+  .track svg {
+    color: ButtonText;
+  }
+  .toggle[data-theme='light'] .day,
+  .toggle[data-theme='dark'] .night {
+    color: HighlightText;
+  }
+  .toggle:focus-visible {
+    outline-color: Highlight;
   }
 }

@@ -25,6 +25,37 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals())
 
 describe('language changes in the complete shell', () => {
+  it.each([
+    ['en', 'Clear search text'],
+    ['es', 'Borrar texto de búsqueda'],
+    ['ja', '検索文字列を消去'],
+  ] as const)(
+    '%s names the clear and theme actions without changing the applied search',
+    async (locale, clearLabel) => {
+      await act(() => i18n.changeLanguage(locale))
+      const initial = '/catalog?q=para&branch=aster-commons'
+      window.history.replaceState(null, '', initial)
+      const r = resources[locale].translation
+      render(<App />)
+      await screen.findByText(i18n.t('catalog.resultCount', { count: 3 }))
+      const theme = screen.getByRole('button', { name: r.theme.switchDark })
+      await userEvent.click(theme)
+      expect(theme).toHaveAccessibleName(r.theme.switchLight)
+      expect(document.documentElement.dataset.theme).toBe('dark')
+      const clear = screen.getByRole('button', { name: clearLabel })
+      expect(clear).toHaveAttribute('type', 'button')
+      expect(within(clear).queryByRole('img')).not.toBeInTheDocument()
+      await userEvent.click(clear)
+      expect(
+        screen.getByRole('searchbox', { name: r.search.label }),
+      ).toHaveValue('')
+      expect(
+        screen.getByRole('searchbox', { name: r.search.label }),
+      ).toHaveFocus()
+      expect(window.location.pathname + window.location.search).toBe(initial)
+      expect(screen.getAllByRole('article')).toHaveLength(3)
+    },
+  )
   it.each(['en', 'es', 'ja'] as const)(
     '%s exposes localized Home/carousel controls and preserves normalized canonical search',
     async (locale) => {
