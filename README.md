@@ -1,5 +1,7 @@
 # PharmaFlow
 
+For the complete local Docker development environment, see [Docker Compose setup](docker/README.md).
+
 An independent, fictional portfolio project for public medication discovery and branch availability comparison. All implementation, visual identity, and copy are original; no previous-employer material is used.
 
 ## Current status

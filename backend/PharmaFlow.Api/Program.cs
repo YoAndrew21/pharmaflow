@@ -26,6 +26,7 @@ builder.Services.AddScoped<IMedicationService, DatabaseMedicationService>();
 builder.Services.AddScoped<IPharmacyService, DatabasePharmacyService>();
 builder.Services.AddScoped<IAvailabilityService, DatabaseAvailabilityService>();
 builder.Services.AddScoped<CanonicalDatabaseSeeder>();
+builder.Services.AddHealthChecks().AddCheck<DatabaseReadinessCheck>("database");
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -50,11 +51,13 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+if (!app.Configuration.GetValue<bool>("Http:DisableHttpsRedirection"))
+    app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health/ready");
 
 app.Run();
 

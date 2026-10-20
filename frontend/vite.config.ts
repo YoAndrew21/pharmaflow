@@ -7,6 +7,11 @@ export default defineConfig({
   plugins: [react()],
   define: demoMetadataDefine,
   server: {
-    proxy: { '/api': { target: 'https://localhost:7043', secure: false } },
+    proxy: {
+      '/api': {
+        target: process.env.API_PROXY_TARGET ?? 'https://localhost:7043',
+        secure: false,
+      },
+    },
   },
 })
