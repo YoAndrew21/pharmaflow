@@ -29,3 +29,13 @@
     transform: translateY(0);
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  .mark span {
+    animation: none;
+  }
+}
+@media (forced-colors: active) {
+  .mark span {
+    background: CanvasText;
+  }
+}

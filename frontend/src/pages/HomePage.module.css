@@ -377,3 +377,21 @@
     box-shadow: var(--shadow-raised);
   }
 }
+
+.pendingDiscovery {
+  margin-block: 0 4rem;
+}
+.pendingStatus {
+  margin: 4rem 0 0;
+  font-weight: 600;
+}
+.pendingTrack {
+  display: flex;
+  gap: 1.25rem;
+  padding-block: var(--space-5);
+  overflow: hidden;
+}
+.pendingTrack > div {
+  flex: 0 0 min(85%, 22.5rem);
+  min-width: 0;
+}

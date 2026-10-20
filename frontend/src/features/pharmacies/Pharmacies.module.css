@@ -189,3 +189,37 @@
     border-color: var(--border-interactive);
   }
 }
+
+.pendingCard,
+.pendingInformation {
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.pendingCard:not(:first-child) {
+  display: none;
+}
+.pendingCard .pendingCardVisual {
+  aspect-ratio: 1.7;
+}
+.detailGrid .pendingDetailVisual {
+  aspect-ratio: 1.75;
+  border-radius: var(--radius-lg);
+}
+@media (min-width: 44rem) {
+  .pendingCard:nth-child(2) {
+    display: grid;
+  }
+}
+@media (min-width: 64rem) {
+  .pendingCard:nth-child(3) {
+    display: grid;
+  }
+  .detailGrid .pendingDetailVisual {
+    aspect-ratio: 1.1;
+  }
+}

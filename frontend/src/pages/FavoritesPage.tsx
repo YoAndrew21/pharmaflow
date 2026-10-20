@@ -9,6 +9,7 @@ import { useFavoriteCatalog } from '../features/favorites/useFavoriteCatalog'
 import styles from '../features/favorites/Favorites.module.css'
 import catalogStyles from '../features/catalog/Catalog.module.css'
 import { StateArtwork } from '../components/StateArtwork'
+import { ReadRetryButton } from '../components/ReadRetryButton'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function FavoritesPage({
@@ -122,46 +123,52 @@ export function FavoritesPage({
               {t('favorites.loading')}
             </p>
           )}
-          {state.status === 'error' && (
-            <section className={styles.state} aria-labelledby="favorites-error">
-              <StateArtwork kind="error" />
-              <h2 id="favorites-error">{t('favorites.errorTitle')}</h2>
-              <p role="status">{t('favorites.errorDescription')}</p>
-              <button
-                type="button"
-                className="button button-primary"
-                onClick={() => setAttempt((value) => value + 1)}
+          <div
+            aria-busy={state.status === 'loading'}
+            data-read-region="favorites-results"
+          >
+            {state.status === 'error' && (
+              <section
+                className={styles.state}
+                aria-labelledby="favorites-error"
               >
-                {t('catalog.retry')}
-              </button>
-            </section>
-          )}
-          {state.status === 'success' && (
-            <ul
-              ref={list}
-              className={catalogStyles.results}
-              aria-label={t('favorites.listLabel')}
-              onClickCapture={(event) => {
-                const button = (
-                  event.target as HTMLElement
-                ).closest<HTMLButtonElement>('button[data-favorite-id]')
-                if (!button) return
-                const index = items.findIndex(
-                  (item) => item.medication.id === button.dataset.favoriteId,
-                )
-                pendingFocus.current =
-                  items[index + 1]?.medication.id ??
-                  items[index - 1]?.medication.id ??
-                  ''
-              }}
-            >
-              {items.map((item) => (
-                <li key={item.medication.id}>
-                  <MedicationCard item={item} />
-                </li>
-              ))}
-            </ul>
-          )}
+                <StateArtwork kind="error" />
+                <h2 id="favorites-error">{t('favorites.errorTitle')}</h2>
+                <p role="status">{t('favorites.errorDescription')}</p>
+              </section>
+            )}
+            {state.status === 'success' && (
+              <ul
+                ref={list}
+                className={catalogStyles.results}
+                aria-label={t('favorites.listLabel')}
+                onClickCapture={(event) => {
+                  const button = (
+                    event.target as HTMLElement
+                  ).closest<HTMLButtonElement>('button[data-favorite-id]')
+                  if (!button) return
+                  const index = items.findIndex(
+                    (item) => item.medication.id === button.dataset.favoriteId,
+                  )
+                  pendingFocus.current =
+                    items[index + 1]?.medication.id ??
+                    items[index - 1]?.medication.id ??
+                    ''
+                }}
+              >
+                {items.map((item) => (
+                  <li key={item.medication.id}>
+                    <MedicationCard item={item} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <ReadRetryButton
+            isError={state.status === 'error'}
+            isLoading={state.status === 'loading'}
+            onRetry={() => setAttempt((value) => value + 1)}
+          />
         </>
       )}
       {!empty && state.status === 'success' && (

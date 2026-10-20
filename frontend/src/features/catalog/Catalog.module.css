@@ -230,3 +230,40 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+.pendingControls {
+  display: grid;
+  gap: var(--space-5);
+  margin-block: var(--space-5);
+  padding: clamp(1rem, 3vw, 1.75rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+.pendingFields {
+  display: grid;
+  gap: var(--space-4);
+}
+.pendingField {
+  display: grid;
+  gap: var(--space-2);
+}
+.pendingSlot:not(:first-child) {
+  display: none;
+}
+@media (min-width: 36rem) {
+  .pendingFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pendingSlot:nth-child(2) {
+    display: block;
+  }
+}
+@media (min-width: 64rem) {
+  .pendingFields {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .pendingSlot:nth-child(3) {
+    display: block;
+  }
+}

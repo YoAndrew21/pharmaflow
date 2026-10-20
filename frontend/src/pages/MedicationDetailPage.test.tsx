@@ -134,12 +134,23 @@ describe('medication detail workflow', () => {
     expect(screen.getByRole('status')).toHaveTextContent(
       'Loading medication details',
     )
+    const skeleton = document.querySelector(
+      '[data-skeleton="medication-detail"]',
+    )
+    expect(skeleton).toBeInTheDocument()
+    expect(
+      document.querySelector('[data-read-region="medication-detail"]'),
+    ).toHaveAttribute('aria-busy', 'true')
+    expect(
+      screen.queryByRole('heading', { name: 'Paracetamol', level: 1 }),
+    ).not.toBeInTheDocument()
     await act(async () => {
       observations.resolve(
         await localCatalogReader.getAvailability('med-par-500'),
       )
     })
     await screen.findByRole('heading', { level: 1, name: 'Paracetamol' })
+    expect(skeleton).not.toBeInTheDocument()
   })
   it.each(['getMedication', 'listBranches', 'getAvailability'] as const)(
     'distinguishes %s rejection from not found and retries',

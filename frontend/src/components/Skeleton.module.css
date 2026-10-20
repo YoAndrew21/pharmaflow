@@ -1,0 +1,35 @@
+.skeleton {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  background: var(--surface-soft);
+}
+.line {
+  min-block-size: 1em;
+}
+.title {
+  min-block-size: 1.6em;
+  max-width: 70%;
+}
+.media {
+  aspect-ratio: 2 / 1;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    130deg,
+    var(--surface-soft),
+    var(--surface-interactive)
+  );
+}
+.control {
+  min-block-size: var(--control-min-size);
+  border-radius: var(--radius-sm);
+}
+/* Deliberately static, including when reduced motion is requested. */
+@media (forced-colors: active) {
+  .skeleton {
+    background: Canvas;
+    border-color: GrayText;
+  }
+}

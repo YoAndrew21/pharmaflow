@@ -1,0 +1,7 @@
+.action {
+  margin-block: var(--space-5);
+}
+.action button[aria-disabled='true'] {
+  cursor: default;
+  opacity: var(--disabled-opacity);
+}

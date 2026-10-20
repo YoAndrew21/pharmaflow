@@ -8,6 +8,8 @@ import { useBranchDirectory } from '../features/pharmacies/useBranches'
 import styles from '../features/pharmacies/Pharmacies.module.css'
 import { PharmaArtwork } from '../components/PharmaArtwork'
 import { StateArtwork } from '../components/StateArtwork'
+import { Skeleton } from '../components/Skeleton'
+import { ReadRetryButton } from '../components/ReadRetryButton'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function PharmacyDirectoryPage({
@@ -29,59 +31,82 @@ export function PharmacyDirectoryPage({
           {t('pharmacies.loadingDirectory')}
         </p>
       )}
-      {state.status === 'error' && (
-        <section className={styles.state} aria-labelledby="directory-error">
-          <StateArtwork kind="error" />
-          <h2 id="directory-error">{t('pharmacies.directoryError')}</h2>
-          <p role="status">{t('pharmacies.readError')}</p>
-          <button
-            type="button"
-            className="button button-primary"
-            onClick={() => setAttempt((value) => value + 1)}
-          >
-            {t('catalog.retry')}
-          </button>
-        </section>
-      )}
-      {state.status === 'success' &&
-        (state.data.length ? (
-          <ul
+      <div
+        aria-busy={state.status === 'loading'}
+        data-read-region="pharmacy-directory"
+      >
+        {state.status === 'loading' && (
+          <div
             className={styles.directory}
-            aria-label={t('pharmacies.listLabel')}
+            aria-hidden="true"
+            data-skeleton="pharmacy-directory"
           >
-            {state.data.map((branch) => (
-              <li key={branch.id}>
-                <article
-                  className={styles.card}
-                  aria-labelledby={`directory-${branch.id}`}
-                >
-                  <div className={styles.cardArtwork}>
-                    <PharmaArtwork kind="branch" variant={branch.id} />
-                  </div>
-                  <p className={styles.indicator}>
-                    {t('pharmacies.fictional')}
-                  </p>
-                  <h2 id={`directory-${branch.id}`}>
-                    <Link
-                      className={styles.branchLink}
-                      to={`/pharmacies/${encodeURIComponent(branch.slug)}`}
-                    >
-                      {branch.name}
-                    </Link>
-                  </h2>
-                  <p className={styles.location}>
-                    {t(`domain.locations.${branch.id}`, {
-                      defaultValue: branch.fictionalLocation,
-                    })}
-                  </p>
-                  <OpeningHours branch={branch} headingLevel={3} />
-                </article>
-              </li>
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className={styles.pendingCard}>
+                <Skeleton kind="media" className={styles.pendingCardVisual} />
+                <Skeleton kind="title" />
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+              </div>
             ))}
-          </ul>
-        ) : (
-          <p role="status">{t('pharmacies.empty')}</p>
-        ))}
+          </div>
+        )}
+        {state.status === 'error' && (
+          <section className={styles.state} aria-labelledby="directory-error">
+            <StateArtwork kind="error" />
+            <h2 id="directory-error">{t('pharmacies.directoryError')}</h2>
+            <p role="status">{t('pharmacies.readError')}</p>
+          </section>
+        )}
+        {state.status === 'success' &&
+          (state.data.length ? (
+            <ul
+              className={styles.directory}
+              aria-label={t('pharmacies.listLabel')}
+            >
+              {state.data.map((branch) => (
+                <li key={branch.id}>
+                  <article
+                    className={styles.card}
+                    aria-labelledby={`directory-${branch.id}`}
+                  >
+                    <div className={styles.cardArtwork}>
+                      <PharmaArtwork kind="branch" variant={branch.id} />
+                    </div>
+                    <p className={styles.indicator}>
+                      {t('pharmacies.fictional')}
+                    </p>
+                    <h2 id={`directory-${branch.id}`}>
+                      <Link
+                        className={styles.branchLink}
+                        to={`/pharmacies/${encodeURIComponent(branch.slug)}`}
+                      >
+                        {branch.name}
+                      </Link>
+                    </h2>
+                    <p className={styles.location}>
+                      {t(`domain.locations.${branch.id}`, {
+                        defaultValue: branch.fictionalLocation,
+                      })}
+                    </p>
+                    <OpeningHours branch={branch} headingLevel={3} />
+                  </article>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p role="status">{t('pharmacies.empty')}</p>
+          ))}
+      </div>
+      <ReadRetryButton
+        isError={state.status === 'error'}
+        isLoading={state.status === 'loading'}
+        onRetry={() => setAttempt((value) => value + 1)}
+      />
     </div>
   )
 }

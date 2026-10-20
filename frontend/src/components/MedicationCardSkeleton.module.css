@@ -1,0 +1,26 @@
+.card {
+  display: grid;
+  align-content: start;
+  gap: var(--space-6);
+  min-width: 0;
+  height: 100%;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+}
+.lines {
+  display: grid;
+  gap: var(--space-3);
+}
+.short {
+  width: 60%;
+}
+@media (forced-colors: active) {
+  .card {
+    background: Canvas;
+    border-color: GrayText;
+    box-shadow: none;
+  }
+}

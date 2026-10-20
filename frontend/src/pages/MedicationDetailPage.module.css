@@ -129,3 +129,42 @@
     gap: 2.5rem;
   }
 }
+
+.pendingDetail {
+  display: grid;
+  gap: var(--space-6);
+}
+.pendingDetail .pendingVisual {
+  aspect-ratio: 1.75;
+  border-radius: var(--radius-lg);
+}
+.pendingIdentity,
+.pendingFacts {
+  display: grid;
+  gap: var(--space-5);
+}
+.pendingFacts {
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.pendingFacts > div {
+  display: grid;
+  gap: var(--space-2);
+}
+.pendingComparison {
+  display: grid;
+  gap: var(--space-5);
+  padding-block: var(--space-6);
+}
+@media (min-width: 36rem) {
+  .pendingFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 60rem) {
+  .pendingDetail .pendingVisual {
+    aspect-ratio: 1.2;
+  }
+}

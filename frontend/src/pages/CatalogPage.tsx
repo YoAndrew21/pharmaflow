@@ -14,6 +14,9 @@ import { useCatalog } from '../features/catalog/useCatalog'
 import { MedicationCard } from '../features/catalog/MedicationCard'
 import styles from '../features/catalog/Catalog.module.css'
 import { StateArtwork } from '../components/StateArtwork'
+import { Skeleton } from '../components/Skeleton'
+import { MedicationCardSkeleton } from '../components/MedicationCardSkeleton'
+import { ReadRetryButton } from '../components/ReadRetryButton'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function CatalogPage({
@@ -81,6 +84,25 @@ export function CatalogPage({
         <h1>{t('catalog.title')}</h1>
         <p>{t('catalog.description')}</p>
       </header>
+      {!metadata && state.status === 'loading' && (
+        <div
+          className={styles.pendingControls}
+          aria-hidden="true"
+          data-skeleton="catalog-controls"
+        >
+          <Skeleton kind="title" />
+          <Skeleton kind="control" />
+          <div className={styles.pendingFields}>
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className={styles.pendingField}>
+                <Skeleton kind="title" />
+                <Skeleton kind="control" />
+              </div>
+            ))}
+          </div>
+          <Skeleton />
+        </div>
+      )}
       {metadata && (
         <>
           <p className={styles.snapshot}>
@@ -189,55 +211,74 @@ export function CatalogPage({
             ? t('catalog.resultCount', { count: result.items.length })
             : t('catalog.readFailed')}
       </p>
-      {state.status === 'error' && (
-        <section className={styles.state} aria-labelledby="error-title">
-          <StateArtwork kind="error" />
-          <h2 id="error-title">{t('catalog.errorTitle')}</h2>
-          <p>{t('catalog.errorDescription')}</p>
-          <div className={styles.stateActions}>
-            <button
-              className="button button-primary"
-              type="button"
-              onClick={() => setAttempt((value) => value + 1)}
-            >
-              {t('catalog.retry')}
-            </button>
-            <button
-              className="button button-secondary"
-              type="button"
-              onClick={reset}
-            >
-              {t('catalog.clear')}
-            </button>
-          </div>
-        </section>
-      )}
-      {result &&
-        (result.items.length ? (
-          <ul className={styles.results} aria-label={t('catalog.resultsLabel')}>
-            {result.items.map((item) => (
-              <li key={item.medication.id}>
-                <MedicationCard item={item} branch={branch} />
-              </li>
+      <div
+        aria-busy={state.status === 'loading'}
+        data-read-region="catalog-results"
+      >
+        {state.status === 'loading' && (
+          <div
+            className={styles.results}
+            aria-hidden="true"
+            data-skeleton="catalog-results"
+          >
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className={styles.pendingSlot}>
+                <MedicationCardSkeleton />
+              </div>
             ))}
-          </ul>
-        ) : (
-          <section className={styles.state} aria-labelledby="empty-title">
-            <StateArtwork />
-            <h2 id="empty-title">{t('catalog.emptyTitle')}</h2>
-            <p>{t('catalog.emptyDescription')}</p>
-            <button
-              className="button button-secondary"
-              type="button"
-              onClick={reset}
-            >
-              {t('catalog.clear')}
-            </button>
+          </div>
+        )}
+        {state.status === 'error' && (
+          <section className={styles.state} aria-labelledby="error-title">
+            <StateArtwork kind="error" />
+            <h2 id="error-title">{t('catalog.errorTitle')}</h2>
+            <p>{t('catalog.errorDescription')}</p>
+            <div className={styles.stateActions}>
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={reset}
+              >
+                {t('catalog.clear')}
+              </button>
+            </div>
           </section>
-        ))}
-      {result && result.items.length > 0 && (
-        <p className={styles.artNote}>{t('visual.artNote')}</p>
-      )}
+        )}
+        {result &&
+          (result.items.length ? (
+            <ul
+              className={styles.results}
+              aria-label={t('catalog.resultsLabel')}
+            >
+              {result.items.map((item) => (
+                <li key={item.medication.id}>
+                  <MedicationCard item={item} branch={branch} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <section className={styles.state} aria-labelledby="empty-title">
+              <StateArtwork />
+              <h2 id="empty-title">{t('catalog.emptyTitle')}</h2>
+              <p>{t('catalog.emptyDescription')}</p>
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={reset}
+              >
+                {t('catalog.clear')}
+              </button>
+            </section>
+          ))}
+        {result && result.items.length > 0 && (
+          <p className={styles.artNote}>{t('visual.artNote')}</p>
+        )}
+      </div>
+      <ReadRetryButton
+        isError={state.status === 'error'}
+        isLoading={state.status === 'loading'}
+        onRetry={() => setAttempt((value) => value + 1)}
+      />
     </div>
   )
 }

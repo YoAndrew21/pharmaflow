@@ -12,6 +12,8 @@ import styles from './MedicationDetailPage.module.css'
 import { FavoriteButton } from '../features/favorites/FavoriteButton'
 import { PharmaArtwork } from '../components/PharmaArtwork'
 import { StateArtwork } from '../components/StateArtwork'
+import { Skeleton } from '../components/Skeleton'
+import { ReadRetryButton } from '../components/ReadRetryButton'
 import { LoadingMark } from '../components/LoadingMark'
 
 export function MedicationDetailPage({
@@ -44,126 +46,156 @@ export function MedicationDetailPage({
         <ArrowLeft size={18} aria-hidden="true" />
         {t('detail.back')}
       </Link>
+      {state.status === 'loading' && <h1>{t('detail.pageTitle')}</h1>}
       {state.status === 'loading' && (
-        <>
-          <h1>{t('detail.pageTitle')}</h1>
-          <p role="status">
-            <LoadingMark />
-            {t('detail.loading')}
-          </p>
-        </>
+        <p role="status">
+          <LoadingMark />
+          {t('detail.loading')}
+        </p>
       )}
-      {state.status === 'error' && (
-        <section className={styles.state} aria-labelledby="detail-error">
-          <StateArtwork kind="error" />
-          <h1 id="detail-error">{t('detail.errorTitle')}</h1>
-          <p role="status">{t('detail.errorDescription')}</p>
-          <button
-            className="button button-primary"
-            type="button"
-            onClick={() => setAttempt((value) => value + 1)}
+      <div
+        aria-busy={state.status === 'loading'}
+        data-read-region="medication-detail"
+      >
+        {state.status === 'loading' && (
+          <div
+            className={styles.pendingDetail}
+            aria-hidden="true"
+            data-skeleton="medication-detail"
           >
-            {t('catalog.retry')}
-          </button>
-        </section>
-      )}
-      {state.status === 'success' && !detail && (
-        <section className={styles.state} aria-labelledby="detail-not-found">
-          <StateArtwork kind="missing" />
-          <h1 id="detail-not-found">{t('detail.notFoundTitle')}</h1>
-          <p>{t('detail.notFoundDescription')}</p>
-        </section>
-      )}
-      {detail && medication && (
-        <>
-          <div className={styles.detailHero}>
-            <figure className={styles.artwork}>
-              <PharmaArtwork
-                kind={medication.formCode}
-                variant={medication.id}
-              />
-              <figcaption>{t('visual.artNote')}</figcaption>
-            </figure>
-            <div>
-              <header className={styles.identity}>
-                <p className="eyebrow">{t('detail.eyebrow')}</p>
-                <h1>{medication.displayName}</h1>
-                <p className={styles.presentation}>
-                  {medication.strengthLabel} ·{' '}
-                  {t(`forms.${medication.formCode}`, {
-                    defaultValue: medication.formCode,
-                  })}{' '}
-                  ·{' '}
-                  {t(`domain.packages.${medication.id}`, {
-                    defaultValue: medication.presentationLabel,
-                  })}
-                </p>
-                <FavoriteButton medication={medication} />
-              </header>
-              <section
-                className={styles.catalogFacts}
-                aria-labelledby="catalog-facts"
-              >
-                <h2 id="catalog-facts">{t('detail.factsTitle')}</h2>
-                <dl>
-                  <div>
-                    <dt>{t('detail.ingredients')}</dt>
-                    <dd>{medication.activeIngredients.join(' + ')}</dd>
-                  </div>
-                  <div>
-                    <dt>{t('detail.strength')}</dt>
-                    <dd>{medication.strengthLabel}</dd>
-                  </div>
-                  <div>
-                    <dt>{t('catalog.form')}</dt>
-                    <dd>
-                      {t(`forms.${medication.formCode}`, {
-                        defaultValue: medication.formCode,
-                      })}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{t('catalog.presentation')}</dt>
-                    <dd>
-                      {t(`domain.packages.${medication.id}`, {
-                        defaultValue: medication.presentationLabel,
-                      })}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{t('detail.category')}</dt>
-                    <dd>
-                      {t(`categories.${medication.categoryCode}`, {
-                        defaultValue: medication.categoryCode,
-                      })}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{t('detail.prescription')}</dt>
-                    <dd>
-                      {t(
-                        medication.prescriptionRequired
-                          ? 'detail.prescriptionRequired'
-                          : 'detail.prescriptionNotRequired',
-                      )}
-                    </dd>
-                  </div>
-                </dl>
-                <p className={styles.prescriptionNote}>
-                  {t('detail.prescriptionNote')}
-                </p>
-              </section>
+            <div className={styles.detailHero}>
+              <Skeleton kind="media" className={styles.pendingVisual} />
+              <div className={styles.pendingIdentity}>
+                <Skeleton kind="title" />
+                <Skeleton />
+                <div className={styles.pendingFacts}>
+                  {Array.from({ length: 6 }, (_, index) => (
+                    <div key={index}>
+                      <Skeleton kind="title" />
+                      <Skeleton />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className={styles.pendingComparison}>
+              <Skeleton kind="title" />
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
             </div>
           </div>
-          <p className={styles.disclosure}>
-            <Info size={18} aria-hidden="true" />
-            <span>{t('detail.disclosure')}</span>
-          </p>
-          <BranchComparison
-            rows={buildBranchComparison(detail.branches, detail.observations)}
-          />
-        </>
-      )}
+        )}
+        {state.status === 'error' && (
+          <section className={styles.state} aria-labelledby="detail-error">
+            <StateArtwork kind="error" />
+            <h1 id="detail-error">{t('detail.errorTitle')}</h1>
+            <p role="status">{t('detail.errorDescription')}</p>
+          </section>
+        )}
+        {state.status === 'success' && !detail && (
+          <section className={styles.state} aria-labelledby="detail-not-found">
+            <StateArtwork kind="missing" />
+            <h1 id="detail-not-found">{t('detail.notFoundTitle')}</h1>
+            <p>{t('detail.notFoundDescription')}</p>
+          </section>
+        )}
+        {detail && medication && (
+          <>
+            <div className={styles.detailHero}>
+              <figure className={styles.artwork}>
+                <PharmaArtwork
+                  kind={medication.formCode}
+                  variant={medication.id}
+                />
+                <figcaption>{t('visual.artNote')}</figcaption>
+              </figure>
+              <div>
+                <header className={styles.identity}>
+                  <p className="eyebrow">{t('detail.eyebrow')}</p>
+                  <h1>{medication.displayName}</h1>
+                  <p className={styles.presentation}>
+                    {medication.strengthLabel} ·{' '}
+                    {t(`forms.${medication.formCode}`, {
+                      defaultValue: medication.formCode,
+                    })}{' '}
+                    ·{' '}
+                    {t(`domain.packages.${medication.id}`, {
+                      defaultValue: medication.presentationLabel,
+                    })}
+                  </p>
+                  <FavoriteButton medication={medication} />
+                </header>
+                <section
+                  className={styles.catalogFacts}
+                  aria-labelledby="catalog-facts"
+                >
+                  <h2 id="catalog-facts">{t('detail.factsTitle')}</h2>
+                  <dl>
+                    <div>
+                      <dt>{t('detail.ingredients')}</dt>
+                      <dd>{medication.activeIngredients.join(' + ')}</dd>
+                    </div>
+                    <div>
+                      <dt>{t('detail.strength')}</dt>
+                      <dd>{medication.strengthLabel}</dd>
+                    </div>
+                    <div>
+                      <dt>{t('catalog.form')}</dt>
+                      <dd>
+                        {t(`forms.${medication.formCode}`, {
+                          defaultValue: medication.formCode,
+                        })}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>{t('catalog.presentation')}</dt>
+                      <dd>
+                        {t(`domain.packages.${medication.id}`, {
+                          defaultValue: medication.presentationLabel,
+                        })}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>{t('detail.category')}</dt>
+                      <dd>
+                        {t(`categories.${medication.categoryCode}`, {
+                          defaultValue: medication.categoryCode,
+                        })}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>{t('detail.prescription')}</dt>
+                      <dd>
+                        {t(
+                          medication.prescriptionRequired
+                            ? 'detail.prescriptionRequired'
+                            : 'detail.prescriptionNotRequired',
+                        )}
+                      </dd>
+                    </div>
+                  </dl>
+                  <p className={styles.prescriptionNote}>
+                    {t('detail.prescriptionNote')}
+                  </p>
+                </section>
+              </div>
+            </div>
+            <p className={styles.disclosure}>
+              <Info size={18} aria-hidden="true" />
+              <span>{t('detail.disclosure')}</span>
+            </p>
+            <BranchComparison
+              rows={buildBranchComparison(detail.branches, detail.observations)}
+            />
+          </>
+        )}
+      </div>
+      <ReadRetryButton
+        isError={state.status === 'error'}
+        isLoading={state.status === 'loading'}
+        onRetry={() => setAttempt((value) => value + 1)}
+      />
     </div>
   )
 }
