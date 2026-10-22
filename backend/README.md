@@ -5,8 +5,10 @@ ingredients, branches, weekly opening intervals, and recorded availability. The 
 embeds that file at build time; rebuild after an approved dataset change. No separate
 fixture or EF `HasData` copy is maintained.
 
-Seeding is explicit and Development-only. Normal API startup never invokes it or
-queries PostgreSQL. Public API requests now use scoped database-backed read services.
+The API's explicit `--seed` action is Development-only. Normal API startup never
+seeds or migrates; public API requests use scoped database-backed read services.
+Production seeding is available only through the separate explicit
+[database release tooling](../docker/DATABASE_RELEASE.md), never web startup.
 
 After the schema has been migrated separately, and the Development connection and
 separate database password have been configured locally, run from the repository root:

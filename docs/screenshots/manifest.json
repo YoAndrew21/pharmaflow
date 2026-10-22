@@ -1,0 +1,72 @@
+{
+  "source": "https://pharmaflow-oux0.onrender.com",
+  "browser": "155.0.8059.85",
+  "conversion": "PNG to lossless WebP; pixels unchanged",
+  "captures": [
+    {
+      "file": "home-desktop-dark.webp",
+      "page": "/",
+      "source": "https://pharmaflow-oux0.onrender.com",
+      "language": "en",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "bytes": 320480,
+      "sha256": "0e74cb3720211a58ba1fab62dccd931b39678eaa331bd7b36d6b32e29bf56211",
+      "capturedAt": "2026-10-22T05:33:31.136Z",
+      "loadingOrError": false
+    },
+    {
+      "file": "catalog-desktop-light.webp",
+      "page": "/catalog",
+      "source": "https://pharmaflow-oux0.onrender.com",
+      "language": "en",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "bytes": 204864,
+      "sha256": "f82d43af3fd3ee97482bd89b3ba2570cc33d6351e751d640efde56f9f9469ccc",
+      "capturedAt": "2026-10-22T05:43:44.352Z",
+      "loadingOrError": false
+    },
+    {
+      "file": "medication-detail-desktop-dark.webp",
+      "page": "/medications/paracetamol-500-tablets",
+      "source": "https://pharmaflow-oux0.onrender.com",
+      "language": "en",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "bytes": 90606,
+      "sha256": "0d66d6c967988ac096b4cbbac3d82c1e2c76184e064264e9edf7f8a6b8504dc2",
+      "capturedAt": "2026-10-22T05:43:48.733Z",
+      "loadingOrError": false
+    },
+    {
+      "file": "pharmacy-detail-mobile-ja-light.webp",
+      "page": "/pharmacies/aster-commons",
+      "source": "https://pharmaflow-oux0.onrender.com",
+      "language": "ja",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "bytes": 73810,
+      "sha256": "49f0159ae7a031995a47c4a5954dabdeb73b2cd5fe4d1667dffab16f99f30563",
+      "capturedAt": "2026-10-22T05:33:40.539Z",
+      "loadingOrError": false
+    },
+    {
+      "file": "favorites-mobile-es-dark.webp",
+      "page": "/favorites",
+      "source": "https://pharmaflow-oux0.onrender.com",
+      "language": "es",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "bytes": 100762,
+      "sha256": "2da81def5a4d6f88000e93c4b78252f7d8b90dc54ca6e185437d39689efaba04",
+      "capturedAt": "2026-10-22T05:33:43.512Z",
+      "loadingOrError": false
+    }
+  ]
+}

@@ -1,4 +1,9 @@
-# Explicit database release (local validation completed; Neon not contacted)
+# Explicit database release and verification
+
+The public demo's initial Neon release and independent SAFE verification have been
+completed. This guide describes the reusable tooling; each future remote operation
+still requires explicit authorization. Credentials and provider configuration remain
+outside Git. Local integration tests use disposable databases.
 
 The public API performs only SELECT queries: medication/ingredient reads, pharmacy/
 opening-interval reads, and recorded availability. It needs no writes or sequences.
@@ -111,7 +116,7 @@ runtime roles. Checks covered:
   the test-only row was then removed deliberately in the isolated fixture.
 - No secret values in command output, image metadata or versionable files.
 
-## Next authorized Neon/Render checkpoint
+## Operator checklist for an authorized Neon/Render release
 
 1. Confirm the dedicated DB, region/version, direct hostname, TLS trust and role names
    using actual provider settings. No endpoint/credential is invented here.
@@ -127,7 +132,8 @@ runtime roles. Checks covered:
    login's separate password. Do not give Render the owner password.
 7. Verify public reads/readiness. Future releases remain explicit jobs, never startup hooks.
 
-No Neon/Render resource, remote connection, or deployment was used for this checkpoint.
+The tooling's local test results are separate from operator-confirmed remote release
+and public application validation; they do not by themselves prove deployment success.
 
 ## Initial runtime role provisioning (explicit, separate action)
 
@@ -305,7 +311,7 @@ owner configuration:
 docker run --rm --env-file .env.release.local pharmaflow-database-release:latest --verify-database-release
 ```
 
-This command is documented for a later operator-authorized run; local validation
+Each remote invocation requires operator authorization; local validation
 does not contact Neon or Render. Do not supply the provisioning password: this
 action never reads it or PasswordMode, and never authenticates as runtime.
 It requires the existing base connection, separate owner password and explicit

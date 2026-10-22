@@ -1,7 +1,9 @@
-# Production image — local preparation only
+# Production image and hosting
 
-No Render/Neon resources, credentials, or deployment are configured here. Development
-still uses `compose.yaml` and the existing frontend/backend Dockerfiles unchanged.
+The public demo runs on Render with PostgreSQL on Neon. This guide documents the
+versionable image and configuration contract; provider resources and credentials
+are managed outside Git. Development uses `compose.yaml` and the existing
+frontend/backend Dockerfiles.
 
 ## Build and run locally
 
@@ -72,20 +74,20 @@ endpoint is added without a provider-specific operational need.
 - Forwarded headers run before HTTPS redirection. The native redirection default
   remains enabled unless explicitly disabled with the existing HTTP setting.
 
-Before Render deployment, verify the actual ingress topology, trusted proxy addresses
+For each Render deployment, verify the actual ingress topology, trusted proxy addresses
 or a narrowly justified network configuration, forwarded header behavior, HTTP
 ingress restrictions, TLS termination, and redirect policy. If Render cannot offer
 stable individual proxy IPs, a reviewed provider-specific solution is still required;
 do not trust every sender just to suppress redirect loops. Verify AllowedHosts and
-the public hostname there as well. No Render dashboard configuration is implemented.
+the public hostname there as well. Provider dashboard settings are managed outside Git.
 
-## Future Render and Neon release checkpoint
+## Render and Neon configuration contract
 
 Render should build repository-root `Dockerfile.production`, final `runtime` target,
 using the root build context. It can supply `PORT`. Required runtime settings are
 Production environment, a base `ConnectionStrings__PharmaFlow`, and secret
 `Database__Password`; proxy/HTTPS/host restrictions depend on the verified ingress.
-Keep `/health/ready` as the candidate readiness path, and verify the provider's
+Use `/health/ready` as the readiness path, and verify the provider's
 healthcheck/restart semantics before choosing its monitor behavior.
 
 Neon still requires its real hostname, port, database, username, a separate password
@@ -93,11 +95,11 @@ secret, and reviewed TLS settings, preferably `SSL Mode=VerifyFull` with certifi
 validation. Do not invent endpoints or embed a password/URL into React. Choose
 runtime connection pooling limits and direct versus pooled release connections after
 reviewing the actual service limits. Use separate release privileges and a read-only
-runtime identity when provisioning is authorized.
+runtime identity. Provisioning always requires separate explicit authorization.
 
 The existing EF migration bundle remains built by the Development backend Dockerfile;
 existing migrations are unchanged. The Production runtime deliberately carries no
-migration command and performs no migration or seed. A future one-shot release artifact
+migration command and performs no migration or seed. The separate one-shot release artifact
 uses the same reviewed migration bundle and the separate explicit runner described in
 [Database release](DATABASE_RELEASE.md). It requires explicit action/target confirmation,
 has no HTTP listener, and never runs on web restart. Real provider execution still
