@@ -16,6 +16,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <ProjectReference Include="../PharmaFlow.Api/PharmaFlow.Api.csproj" />
+    <ProjectReference Include="../PharmaFlow.DatabaseRelease/PharmaFlow.DatabaseRelease.csproj" />
     <!-- Generated output copy of the single canonical source, never an authored fixture. -->
     <Content Include="../../demo-data/catalog.json" Link="demo-data/catalog.json"
              CopyToOutputDirectory="PreserveNewest" />

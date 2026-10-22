@@ -1,0 +1,26 @@
+FROM node:24.21.0-bookworm-slim AS frontend-build
+WORKDIR /src/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+COPY demo-data/catalog.json /src/demo-data/catalog.json
+RUN npm run build
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0.401 AS backend-build
+WORKDIR /src
+COPY global.json ./
+COPY backend/PharmaFlow.Api/PharmaFlow.Api.csproj backend/PharmaFlow.Api/
+RUN dotnet restore backend/PharmaFlow.Api/PharmaFlow.Api.csproj
+COPY backend/PharmaFlow.Api/ backend/PharmaFlow.Api/
+COPY demo-data/catalog.json demo-data/catalog.json
+RUN dotnet publish backend/PharmaFlow.Api -c Release --no-restore -o /out /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.12 AS runtime
+WORKDIR /app
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_HTTP_PORTS=8080
+COPY --from=backend-build /out/ ./
+COPY --from=frontend-build /src/frontend/dist/ ./wwwroot/
+USER app
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "PharmaFlow.Api.dll"]

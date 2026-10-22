@@ -2,5 +2,6 @@
   <Folder Name="/backend/">
     <Project Path="backend/PharmaFlow.Api/PharmaFlow.Api.csproj" />
     <Project Path="backend/PharmaFlow.Api.Tests/PharmaFlow.Api.Tests.csproj" />
+    <Project Path="backend/PharmaFlow.DatabaseRelease/PharmaFlow.DatabaseRelease.csproj" />
   </Folder>
 </Solution>

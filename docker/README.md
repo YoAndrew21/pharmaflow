@@ -1,6 +1,7 @@
 # Local development with Docker Compose
 
 This is a local development environment, not a public deployment configuration.
+For the separate compiled frontend/API image, see [Production preparation](PRODUCTION.md).
 Install Docker Desktop with Linux containers and Compose. No host Node, .NET SDK,
 PostgreSQL, User Secrets, or HTTPS certificate is required for this workflow.
 
