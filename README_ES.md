@@ -14,23 +14,23 @@ La demo utiliza infraestructura gratuita; la primera solicitud después de un pe
 
 ## Dentro de la aplicación
 
-![Inicio de PharmaFlow en inglés y tema oscuro, con una ilustración original de una cápsula](docs/screenshots/home-desktop-dark.webp)
+![Inicio de PharmaFlow en español y tema oscuro, con una ilustración original de una cápsula](docs/screenshots/es/home-desktop-dark.webp)
 *Inicio — identidad visual original, descubrimiento del catálogo y aviso claro de datos ficticios.*
 
-![Detalle de medicamento en inglés y tema oscuro, con disponibilidad y precios de referencia por sucursal](docs/screenshots/medication-detail-desktop-dark.webp)
+![Detalle de medicamento en español y tema oscuro, con disponibilidad y precios de referencia por sucursal](docs/screenshots/es/medication-detail-desktop-dark.webp)
 *Una presentación, tres observaciones por sucursal: disponibilidad y precio de referencia son independientes.*
 
 <details>
-<summary>Catálogo y vistas móviles multilingües</summary>
+<summary>Catálogo y vistas móviles</summary>
 
-![Catálogo de medicamentos en inglés y tema claro con varias presentaciones](docs/screenshots/catalog-desktop-light.webp)
+![Catálogo de medicamentos en español y tema claro con varias presentaciones](docs/screenshots/es/catalog-desktop-light.webp)
 *Catálogo — tarjetas de presentaciones, resúmenes de disponibilidad y precios de referencia en tema claro.*
 
-![Detalle de farmacia en japonés y tema claro, con horario semanal en móvil](docs/screenshots/pharmacy-detail-mobile-ja-light.webp)
-*Vista móvil en japonés — horario semanal completo, incluido el día cerrado.*
+![Detalle de farmacia en español y tema claro, con horario semanal en móvil](docs/screenshots/es/pharmacy-detail-mobile-light.webp)
+*Detalle de farmacia en móvil — horario semanal completo, incluido el día cerrado.*
 
-![Favoritos en español y tema oscuro, con una presentación guardada en móvil](docs/screenshots/favorites-mobile-es-dark.webp)
-*Vista móvil en español — presentación guardada desde la UI pública, únicamente en ese navegador.*
+![Favoritos en español y tema oscuro, con una presentación guardada en móvil](docs/screenshots/es/favorites-mobile-dark.webp)
+*Favoritos en móvil — presentación guardada desde la UI pública, únicamente en ese navegador.*
 
 </details>
 

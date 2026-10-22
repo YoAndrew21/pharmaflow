@@ -10,13 +10,21 @@ const origin = 'https://pharmaflow-oux0.onrender.com'
 const output = path.resolve(__dirname, '../docs/screenshots')
 const desktop = { width: 1440, height: 900 }
 const mobile = { width: 390, height: 844 }
-const captures = [
-  { id: 'home', file: 'home-desktop-dark.webp', viewport: desktop, language: 'en', theme: 'dark' },
-  { id: 'catalog', file: 'catalog-desktop-light.webp', viewport: desktop, language: 'en', theme: 'light' },
-  { id: 'medication-detail', file: 'medication-detail-desktop-dark.webp', viewport: desktop, language: 'en', theme: 'dark' },
-  { id: 'pharmacy-detail', file: 'pharmacy-detail-mobile-ja-light.webp', viewport: mobile, language: 'ja', theme: 'light' },
-  { id: 'favorites', file: 'favorites-mobile-es-dark.webp', viewport: mobile, language: 'es', theme: 'dark' },
+const locales = [
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Español' },
+  { code: 'ja', label: '日本語' },
 ]
+const captures = [
+  { id: 'home', file: 'home-desktop-dark.webp', viewport: desktop, theme: 'dark' },
+  { id: 'catalog', file: 'catalog-desktop-light.webp', viewport: desktop, theme: 'light' },
+  { id: 'medication-detail', file: 'medication-detail-desktop-dark.webp', viewport: desktop, theme: 'dark' },
+  { id: 'pharmacy-detail', file: 'pharmacy-detail-mobile-light.webp', viewport: mobile, theme: 'light' },
+  { id: 'favorites', file: 'favorites-mobile-dark.webp', viewport: mobile, theme: 'dark' },
+]
+const matrix = locales.flatMap(locale => captures.map(item => ({
+  ...item, language: locale.code, label: locale.label, file: `${locale.code}/${item.file}`,
+})))
 
 async function ready(page) {
   await page.waitForFunction(() => {
@@ -80,13 +88,15 @@ async function finish(page, item) {
 
 async function main() {
   const only = process.argv[2]
-  if (only && !captures.some(item => item.id === only)) throw new Error('Unknown capture ID')
-  await fs.mkdir(output, { recursive: true })
+  const onlyLocale = process.argv[3]
+  if (only && only !== 'all' && !captures.some(item => item.id === only)) throw new Error('Unknown capture ID')
+  if (onlyLocale && !locales.some(locale => locale.code === onlyLocale)) throw new Error('Unknown locale')
+  for (const locale of locales) await fs.mkdir(path.join(output, locale.code), { recursive: true })
   const browser = await chromium.launch({ channel: process.env.PHARMAFLOW_CAPTURE_BROWSER || 'chrome', headless: true })
   const results = []
   try {
-    for (const item of captures.filter(item => !only || item.id === only)) {
-      console.log(`Navigating public UI: ${item.id}`)
+    for (const item of matrix.filter(item => (!only || only === 'all' || item.id === only) && (!onlyLocale || item.language === onlyLocale))) {
+      console.log(`Navigating public UI: ${item.language}/${item.id}`)
       const context = await browser.newContext({
         viewport: item.viewport, deviceScaleFactor: 1, locale: 'en-US', timezoneId: 'UTC',
         colorScheme: item.theme, reducedMotion: 'reduce', isMobile: item.viewport === mobile, hasTouch: item.viewport === mobile,
@@ -109,31 +119,38 @@ async function main() {
             await page.getByRole('heading', { name: 'Availability by branch', exact: true }).waitFor()
             assert.match(await page.locator('main').innerText(), /Low stock/)
             assert.match(await page.locator('main').innerText(), /Unavailable/)
-            await page.getByRole('heading', { name: 'Availability by branch', exact: true }).evaluate(node => {
-              window.scrollTo(0, node.getBoundingClientRect().top + window.scrollY - 32)
-            })
           } else if (item.id === 'favorites') {
             await page.getByRole('button', { name: /^Save Paracetamol.*500 mg/ }).first().click()
             const favoritesLink = page.locator('#primary-navigation').getByRole('link', { name: /^Favorites/ })
             if (!(await favoritesLink.isVisible())) await page.locator('button[aria-controls="primary-navigation"]').click()
             await favoritesLink.click()
             await ready(page)
-            await language(page, 'Español', 'es')
-            await page.getByRole('heading', { level: 1, name: 'Favoritos', exact: true }).waitFor()
             assert.equal(await page.locator('main article').count(), 1)
-            await page.getByRole('heading', { level: 1 }).evaluate(node => node.scrollIntoView({ block: 'start' }))
-          } else {
-            await page.getByText('9 presentations found', { exact: true }).evaluate(node => {
-              window.scrollTo(0, node.getBoundingClientRect().top + window.scrollY - 24)
-            })
           }
         } else {
           await navigate(page, 'Pharmacies')
           await page.getByRole('link', { name: 'Aster Commons', exact: true }).click()
           await ready(page)
           await page.getByRole('heading', { level: 1, name: 'Aster Commons', exact: true }).waitFor()
-          await language(page, '日本語', 'ja')
+        }
+        // Select the real UI locale, then align the same semantic anchor in each language.
+        await language(page, item.label, item.language)
+        await ready(page)
+        if (item.id === 'home') {
+          await page.evaluate(() => window.scrollTo(0, 0))
+        } else if (item.id === 'catalog') {
+          await page.locator('main article').first().evaluate(node => {
+            window.scrollTo(0, node.getBoundingClientRect().top + window.scrollY - 64)
+          })
+        } else if (item.id === 'medication-detail') {
+          assert.equal(await page.locator('#comparison-title + p + ul > li').count(), 3)
+          await page.locator('#comparison-title').evaluate(node => {
+            window.scrollTo(0, node.getBoundingClientRect().top + window.scrollY - 32)
+          })
+        } else if (item.id === 'pharmacy-detail') {
           await page.locator('[id^="hours-"]').evaluate(node => node.scrollIntoView({ block: 'center' }))
+        } else {
+          await page.getByRole('heading', { level: 1 }).evaluate(node => node.scrollIntoView({ block: 'start' }))
         }
         const result = await finish(page, item)
         results.push(result)
@@ -141,11 +158,11 @@ async function main() {
       } finally { await context.close() }
     }
     let previous = []
-    if (only) {
+    if (only || onlyLocale) {
       try { previous = JSON.parse(await fs.readFile(path.join(output, 'manifest.json'), 'utf8')).captures }
       catch (error) { if (error.code !== 'ENOENT') throw error }
     }
-    const combined = captures.map(item => results.find(row => row.file === item.file) || previous.find(row => row.file === item.file)).filter(Boolean)
+    const combined = matrix.map(item => results.find(row => row.file === item.file) || previous.find(row => row.file === item.file)).filter(Boolean)
     await fs.writeFile(path.join(output, 'manifest.json'), JSON.stringify({
       source: origin, browser: await browser.version(), conversion: 'PNG to lossless WebP; pixels unchanged', captures: combined,
     }, null, 2) + '\n')

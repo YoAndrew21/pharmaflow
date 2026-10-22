@@ -14,23 +14,23 @@ The demo uses free infrastructure; the first request after inactivity may take l
 
 ## In the application
 
-![PharmaFlow Home in English, with a dark theme and an original capsule illustration](docs/screenshots/home-desktop-dark.webp)
+![PharmaFlow Home in English, with a dark theme and an original capsule illustration](docs/screenshots/en/home-desktop-dark.webp)
 *Home — original visual identity, catalog discovery, and a clear fictional-data disclosure.*
 
-![Medication detail in English and dark theme, comparing branch availability and reference prices](docs/screenshots/medication-detail-desktop-dark.webp)
+![Medication detail in English and dark theme, comparing branch availability and reference prices](docs/screenshots/en/medication-detail-desktop-dark.webp)
 *One presentation, three branch observations: availability and reference price remain independent.*
 
 <details>
-<summary>Catalog and multilingual mobile views</summary>
+<summary>Catalog and mobile views</summary>
 
-![English medication catalog in light theme with multiple presentations](docs/screenshots/catalog-desktop-light.webp)
+![English medication catalog in light theme with multiple presentations](docs/screenshots/en/catalog-desktop-light.webp)
 *Catalog — presentation cards, availability summaries, and reference prices in the light theme.*
 
-![Japanese pharmacy detail in light theme showing the weekly opening schedule on mobile](docs/screenshots/pharmacy-detail-mobile-ja-light.webp)
-*Japanese mobile view — a complete weekly schedule, including the closed day.*
+![English pharmacy detail in light theme showing the weekly opening schedule on mobile](docs/screenshots/en/pharmacy-detail-mobile-light.webp)
+*Mobile pharmacy view — a complete weekly schedule, including the closed day.*
 
-![Spanish Favorites page in dark theme with a saved medication presentation on mobile](docs/screenshots/favorites-mobile-es-dark.webp)
-*Spanish mobile view — a presentation saved through the public UI, only in that browser.*
+![English Favorites page in dark theme with a saved medication presentation on mobile](docs/screenshots/en/favorites-mobile-dark.webp)
+*Mobile favorites view — a presentation saved through the public UI, only in that browser.*
 
 </details>
 

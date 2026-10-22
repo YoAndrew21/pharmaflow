@@ -14,23 +14,23 @@ React · TypeScript · ASP.NET Core · C# · PostgreSQL · Docker
 
 ## 画面紹介
 
-![英語・ダークテーマのホーム画面。独自制作のカプセルのイラストとカタログへの導線](docs/screenshots/home-desktop-dark.webp)
+![日本語・ダークテーマのホーム画面。独自制作のカプセルのイラストとカタログへの導線](docs/screenshots/ja/home-desktop-dark.webp)
 *ホーム画面：独自のビジュアル、カタログ検索、架空データであることを伝える表示。*
 
-![英語・ダークテーマの医薬品詳細画面。店舗別の在庫状況と参考価格を比較](docs/screenshots/medication-detail-desktop-dark.webp)
+![日本語・ダークテーマの医薬品詳細画面。店舗別の在庫状況と参考価格を比較](docs/screenshots/ja/medication-detail-desktop-dark.webp)
 *同じ規格・包装に対する3店舗のデータ。在庫状況と参考価格を別々の情報として扱います。*
 
 <details>
-<summary>カタログと多言語のモバイル画面</summary>
+<summary>カタログとモバイル画面</summary>
 
-![英語・ライトテーマのカタログ画面。複数の医薬品のカード](docs/screenshots/catalog-desktop-light.webp)
+![日本語・ライトテーマのカタログ画面。複数の医薬品のカード](docs/screenshots/ja/catalog-desktop-light.webp)
 *カタログ：ライトテーマのカード表示、在庫状況の要約、参考価格。*
 
-![日本語・ライトテーマのモバイル店舗詳細画面。1週間の営業時間](docs/screenshots/pharmacy-detail-mobile-ja-light.webp)
+![日本語・ライトテーマのモバイル店舗詳細画面。1週間の営業時間](docs/screenshots/ja/pharmacy-detail-mobile-light.webp)
 *日本語のモバイル画面：休業日を含む1週間の営業時間。*
 
-![スペイン語・ダークテーマのモバイルお気に入り画面。保存済みの医薬品](docs/screenshots/favorites-mobile-es-dark.webp)
-*スペイン語のモバイル画面：公開UIから保存した項目。保存先はそのブラウザー内のみです。*
+![日本語・ダークテーマのモバイルお気に入り画面。保存済みの医薬品](docs/screenshots/ja/favorites-mobile-dark.webp)
+*日本語のモバイル画面：公開UIから保存した項目。保存先はそのブラウザー内のみです。*
 
 </details>
 
